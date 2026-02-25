@@ -1,0 +1,69 @@
+{
+  "originHash" : "51873d0654ca8e418ab02e374fd0ed872a57ece784c6183b1148d218ab2d0714",
+  "pins" : [
+    {
+      "identity" : "achtung",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/ios-tooling/achtung",
+      "state" : {
+        "revision" : "87baf66fd4d9e8d38aae469240866e6ebd61819b",
+        "version" : "0.3.18"
+      }
+    },
+    {
+      "identity" : "convey",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/ios-tooling/Convey",
+      "state" : {
+        "revision" : "3bb1861446ebcaa03917136b58f15af078d58b31",
+        "version" : "3.1.3"
+      }
+    },
+    {
+      "identity" : "crossplatformkit",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/ios-tooling/crossplatformkit",
+      "state" : {
+        "revision" : "c5700b083674d8940315c80c50ac18b729cc84d1",
+        "version" : "1.1.0"
+      }
+    },
+    {
+      "identity" : "johnnycache",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/ios-tooling/JohnnyCache.git",
+      "state" : {
+        "revision" : "856c2ab760db582ce216bf3cfb8792f04824966b",
+        "version" : "1.0.9"
+      }
+    },
+    {
+      "identity" : "journalist",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/ios-tooling/journalist",
+      "state" : {
+        "revision" : "a4830f26ff8c3a817669d5e7fbe21a1db77fcb9a",
+        "version" : "1.0.13"
+      }
+    },
+    {
+      "identity" : "suite",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/ios-tooling/Suite.git",
+      "state" : {
+        "revision" : "bbfd2537d797b543fe8bb5a16edc2f823d5db401",
+        "version" : "1.3.4"
+      }
+    },
+    {
+      "identity" : "swift-syntax",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/apple/swift-syntax",
+      "state" : {
+        "revision" : "4799286537280063c85a32f09884cfbca301b1a1",
+        "version" : "602.0.0"
+      }
+    }
+  ],
+  "version" : 3
+}

@@ -6,19 +6,31 @@
 //
 
 import SwiftUI
+import Internal
 
 struct ContentView: View {
-    var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world!")
-        }
-        .padding()
-    }
+	@State private var viewModel = AppViewModel()
+
+	var body: some View {
+		NavigationSplitView {
+			SidebarView()
+		} content: {
+			if let category = viewModel.selectedCategory {
+				ContentListView(platform: viewModel.selectedPlatform, category: category)
+			} else {
+				EmptyStateView(message: "Select a category")
+			}
+		} detail: {
+			if let item = viewModel.selectedItem {
+				DetailView(item: item)
+			} else {
+				EmptyStateView(message: "Select an item to view details")
+			}
+		}
+		.environment(viewModel)
+	}
 }
 
 #Preview {
-    ContentView()
+	ContentView()
 }

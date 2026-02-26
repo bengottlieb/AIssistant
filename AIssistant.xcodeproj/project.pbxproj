@@ -14,6 +14,7 @@
 		B574D9EA2F4F7DA60015B9A9 /* Achtung in Frameworks */ = {isa = PBXBuildFile; productRef = B574D9E92F4F7DA60015B9A9 /* Achtung */; };
 		B574D9ED2F4F7DD00015B9A9 /* CrossPlatformKit in Frameworks */ = {isa = PBXBuildFile; productRef = B574D9EC2F4F7DD00015B9A9 /* CrossPlatformKit */; };
 		B574D9F02F4F7E430015B9A9 /* Journalist in Frameworks */ = {isa = PBXBuildFile; productRef = B574D9EF2F4F7E430015B9A9 /* Journalist */; };
+		B574D9F12F4F7F000015B9A9 /* Suite in Frameworks */ = {isa = PBXBuildFile; productRef = B574D9F22F4F7F000015B9A9 /* Suite */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -64,6 +65,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				B574D9DC2F4F7CDF0015B9A9 /* Internal.framework in Frameworks */,
+				B574D9F12F4F7F000015B9A9 /* Suite in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -132,6 +134,7 @@
 			);
 			name = AIssistant;
 			packageProductDependencies = (
+				B574D9F22F4F7F000015B9A9 /* Suite */,
 			);
 			productName = AIssistant;
 			productReference = B574D9C32F4F7CB90015B9A9 /* AIssistant.app */;
@@ -382,10 +385,9 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = YY6CWUX533;
-				ENABLE_APP_SANDBOX = YES;
+				ENABLE_APP_SANDBOX = NO;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
-				ENABLE_USER_SELECTED_FILES = readonly;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -400,7 +402,6 @@
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
 				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
 				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
 				SWIFT_VERSION = 5.0;
 			};
 			name = Debug;
@@ -414,10 +415,9 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = YY6CWUX533;
-				ENABLE_APP_SANDBOX = YES;
+				ENABLE_APP_SANDBOX = NO;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
-				ENABLE_USER_SELECTED_FILES = readonly;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -432,7 +432,6 @@
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
 				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
 				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
 				SWIFT_VERSION = 5.0;
 			};
 			name = Release;
@@ -440,7 +439,7 @@
 		B574D9DF2F4F7CDF0015B9A9 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				BUILD_LIBRARY_FOR_DISTRIBUTION = YES;
+				BUILD_LIBRARY_FOR_DISTRIBUTION = NO;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
@@ -478,7 +477,7 @@
 		B574D9E02F4F7CDF0015B9A9 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				BUILD_LIBRARY_FOR_DISTRIBUTION = YES;
+				BUILD_LIBRARY_FOR_DISTRIBUTION = NO;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
@@ -613,6 +612,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = B574D9EE2F4F7E430015B9A9 /* XCRemoteSwiftPackageReference "journalist" */;
 			productName = Journalist;
+		};
+	B574D9F22F4F7F000015B9A9 /* Suite */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = B574D9E22F4F7D380015B9A9 /* XCRemoteSwiftPackageReference "Suite" */;
+			productName = Suite;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

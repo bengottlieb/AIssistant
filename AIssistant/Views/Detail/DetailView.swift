@@ -12,7 +12,6 @@ struct DetailView: View {
 	let item: ContentItem
 
 	@State private var editedContent: String = ""
-	@State private var showingPreview = false
 	@State private var showingTransferSheet = false
 	@State private var hasChanges = false
 
@@ -25,29 +24,18 @@ struct DetailView: View {
 				Divider()
 			}
 
-			// Editor / Preview toggle
-			Group {
-				if showingPreview {
-					MarkdownPreviewView(markdown: editedContent)
-				} else {
-					MarkdownEditorView(content: $editedContent)
-						.onChange(of: editedContent) { _, newValue in
-							hasChanges = newValue != item.rawContent
-						}
-				}
+			HSplitView {
+				MarkdownEditorView(content: $editedContent)
+					.onChange(of: editedContent) { _, newValue in
+						hasChanges = newValue != item.rawContent
+					}
+
+				MarkdownPreviewView(markdown: editedContent)
 			}
 		}
 		.navigationTitle(item.name)
 		.toolbar {
 			ToolbarItemGroup {
-				Picker("Mode", selection: $showingPreview) {
-					Label("Edit", systemImage: "pencil")
-						.tag(false)
-					Label("Preview", systemImage: "eye")
-						.tag(true)
-				}
-				.pickerStyle(.segmented)
-
 				Button {
 					showingTransferSheet = true
 				} label: {

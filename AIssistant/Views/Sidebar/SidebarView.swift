@@ -14,20 +14,26 @@ struct SidebarView: View {
 	var body: some View {
 		@Bindable var viewModel = viewModel
 
-		VStack(spacing: 0) {
-			Picker("Platform", selection: $viewModel.selectedPlatform) {
-				ForEach(PlatformKind.allCases) { platform in
-					Text(platform.displayName).tag(platform)
+		List(selection: $viewModel.selectedCategory) {
+			Section {
+				Picker("Platform", selection: $viewModel.selectedPlatform) {
+					ForEach(PlatformKind.allCases) { platform in
+						Text(platform.displayName).tag(platform)
+					}
+				}
+				.pickerStyle(.segmented)
+				.listRowSeparator(.hidden)
+				.listRowInsets(EdgeInsets(top: 8, leading: 8, bottom: 4, trailing: 8))
+			}
+
+			Section {
+				ForEach(ContentCategoryKind.allCases) { category in
+					Label(category.displayName, systemImage: category.systemImage)
+						.tag(category)
 				}
 			}
-			.pickerStyle(.segmented)
-			.padding()
-
-			List(ContentCategoryKind.allCases, selection: $viewModel.selectedCategory) { category in
-				Label(category.displayName, systemImage: category.systemImage)
-					.tag(category)
-			}
 		}
+		.listStyle(.sidebar)
 		.navigationTitle("AIssistant")
 	}
 }

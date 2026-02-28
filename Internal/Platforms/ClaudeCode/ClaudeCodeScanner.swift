@@ -90,11 +90,27 @@ public struct ClaudeCodeScanner: PlatformScanner {
 
 	// MARK: - Commands
 	private nonisolated func scanCommands() throws -> [ContentItem] {
-		let pluginsDir = platformKind.baseDirectory.appending(path: "plugins/marketplaces")
 		var items: [ContentItem] = []
 		let fm = FileManager.default
+		var activeFilenames: Set<String> = []
 
-		guard fm.fileExists(atPath: pluginsDir.path(percentEncoded: false)) else { return [] }
+		// Scan ~/.claude/commands/ (active commands take priority)
+		let userCommandsDir = platformKind.baseDirectory.appending(path: "commands")
+		if fm.fileExists(atPath: userCommandsDir.path(percentEncoded: false)) {
+			let commandFiles = try fm.contentsOfDirectory(at: userCommandsDir, includingPropertiesForKeys: nil)
+				.filter { $0.pathExtension == "md" }
+
+			for commandFile in commandFiles {
+				activeFilenames.insert(commandFile.lastPathComponent)
+				if let item = try contentItem(from: commandFile, category: .commands) {
+					items.append(item)
+				}
+			}
+		}
+
+		// Scan plugin directories, skipping files already active in user commands
+		let pluginsDir = platformKind.baseDirectory.appending(path: "plugins/marketplaces")
+		guard fm.fileExists(atPath: pluginsDir.path(percentEncoded: false)) else { return items }
 
 		let marketplaces = try fm.contentsOfDirectory(at: pluginsDir, includingPropertiesForKeys: nil)
 		for marketplace in marketplaces {
@@ -103,6 +119,7 @@ public struct ClaudeCodeScanner: PlatformScanner {
 
 			let plugins = try fm.contentsOfDirectory(at: pluginsPath, includingPropertiesForKeys: nil)
 			for plugin in plugins {
+				let pluginName = plugin.lastPathComponent
 				let commandsDir = plugin.appending(path: "commands")
 				guard fm.fileExists(atPath: commandsDir.path(percentEncoded: false)) else { continue }
 
@@ -110,7 +127,8 @@ public struct ClaudeCodeScanner: PlatformScanner {
 					.filter { $0.pathExtension == "md" }
 
 				for commandFile in commandFiles {
-					if let item = try contentItem(from: commandFile, category: .commands) {
+					guard !activeFilenames.contains(commandFile.lastPathComponent) else { continue }
+					if let item = try contentItem(from: commandFile, category: .commands, namePrefix: pluginName) {
 						items.append(item)
 					}
 				}
@@ -222,10 +240,11 @@ public struct ClaudeCodeScanner: PlatformScanner {
 	}
 
 	// MARK: - Helpers
-	private nonisolated func contentItem(from fileURL: URL, category: ContentCategoryKind, fallbackName: String? = nil) throws -> ContentItem? {
+	private nonisolated func contentItem(from fileURL: URL, category: ContentCategoryKind, fallbackName: String? = nil, namePrefix: String? = nil) throws -> ContentItem? {
 		let content = try String(contentsOf: fileURL, encoding: .utf8)
 		let document = FrontmatterDocument(rawContent: content)
-		let name = document.frontmatter.name ?? fallbackName ?? fileURL.deletingPathExtension().lastPathComponent
+		let baseName = document.frontmatter.name ?? fallbackName ?? fileURL.deletingPathExtension().lastPathComponent
+		let name = namePrefix.map { "\($0)/\(baseName)" } ?? baseName
 
 		return ContentItem(
 			name: name,

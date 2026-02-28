@@ -198,7 +198,7 @@
 			);
 			mainGroup = B574D9BA2F4F7CB90015B9A9;
 			minimizedProjectReferenceProxies = 1;
-		packageReferences = (
+			packageReferences = (
 				B574D9E22F4F7D380015B9A9 /* XCRemoteSwiftPackageReference "Suite" */,
 				B574D9E52F4F7D750015B9A9 /* XCRemoteSwiftPackageReference "Convey" */,
 				B574D9E82F4F7DA60015B9A9 /* XCRemoteSwiftPackageReference "achtung" */,
@@ -589,7 +589,7 @@
 				minimumVersion = 1.0.13;
 			};
 		};
-	B574D9F32F4F80000015B9A9 /* XCRemoteSwiftPackageReference "swift-markdown-ui" */ = {
+		B574D9F32F4F80000015B9A9 /* XCRemoteSwiftPackageReference "swift-markdown-ui" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/gonzalezreal/swift-markdown-ui";
 			requirement = {
@@ -625,12 +625,12 @@
 			package = B574D9EE2F4F7E430015B9A9 /* XCRemoteSwiftPackageReference "journalist" */;
 			productName = Journalist;
 		};
-	B574D9F22F4F7F000015B9A9 /* Suite */ = {
+		B574D9F22F4F7F000015B9A9 /* Suite */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = B574D9E22F4F7D380015B9A9 /* XCRemoteSwiftPackageReference "Suite" */;
 			productName = Suite;
 		};
-	B574D9F42F4F80000015B9A9 /* MarkdownUI */ = {
+		B574D9F42F4F80000015B9A9 /* MarkdownUI */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = B574D9F32F4F80000015B9A9 /* XCRemoteSwiftPackageReference "swift-markdown-ui" */;
 			productName = MarkdownUI;

@@ -14,6 +14,8 @@ struct ContentListView: View {
 
 	@Environment(AppViewModel.self) private var viewModel
 	@State private var loadingState: LoadingState<[ContentItem]> = .idle
+	@State private var watcher: DirectoryWatcher?
+	@State private var refreshID = UUID()
 
 	var body: some View {
 		Group {
@@ -52,9 +54,12 @@ struct ContentListView: View {
 			}
 		}
 		.navigationTitle(category.displayName)
-		.task(id: TaskID(platform: platform, category: category)) {
+		.task(id: TaskID(platform: platform, category: category, refreshID: refreshID)) {
 			await scanItems()
 		}
+		.onAppear { startWatching() }
+		.onChange(of: platform) { startWatching() }
+		.onChange(of: category) { startWatching() }
 	}
 
 	private func scanItems() async {
@@ -66,14 +71,26 @@ struct ContentListView: View {
 		}
 
 		if let items = result {
-			loadingState = items.isEmpty ? .empty : .loaded(items)
+			let sorted = items.sorted { $0.name.localizedCaseInsensitiveCompare($1.name) == .orderedAscending }
+			loadingState = sorted.isEmpty ? .empty : .loaded(sorted)
 		} else {
 			loadingState = .empty
+		}
+	}
+
+	private func startWatching() {
+		let scanner = platform.scanner(for: category)
+		let directories = scanner.watchedDirectories
+		guard !directories.isEmpty else { watcher = nil; return }
+
+		watcher = DirectoryWatcher(directories: directories) { [self] in
+			refreshID = UUID()
 		}
 	}
 
 	private struct TaskID: Equatable {
 		let platform: PlatformKind
 		let category: ContentCategoryKind
+		let refreshID: UUID
 	}
 }

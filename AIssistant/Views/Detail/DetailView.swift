@@ -13,21 +13,20 @@ struct DetailView: View {
 
 	@State private var editedContent: String = ""
 	@State private var showingTransferSheet = false
-	@State private var hasChanges = false
+	@State private var saveTask: Task<Void, Never>?
+	@State private var pendingSaveURL: URL?
 
 	var body: some View {
 		VStack(spacing: 0) {
-			if let document = item.document, !document.frontmatter.fields.isEmpty {
-				MetadataView(frontmatter: document.frontmatter)
-					.padding()
+			MetadataView(item: item)
+				.padding()
 
-				Divider()
-			}
+			Divider()
 
 			HSplitView {
 				MarkdownEditorView(content: $editedContent)
 					.onChange(of: editedContent) { _, newValue in
-						hasChanges = newValue != item.rawContent
+						scheduleAutoSave(content: newValue)
 					}
 
 				MarkdownPreviewView(markdown: editedContent)
@@ -41,13 +40,6 @@ struct DetailView: View {
 				} label: {
 					Label("Transfer", systemImage: "arrow.right.arrow.left")
 				}
-
-				if hasChanges {
-					Button("Save") {
-						saveContent()
-					}
-					.keyboardShortcut("s", modifiers: .command)
-				}
 			}
 		}
 		.sheet(isPresented: $showingTransferSheet) {
@@ -55,21 +47,35 @@ struct DetailView: View {
 		}
 		.onAppear {
 			editedContent = item.rawContent
-			hasChanges = false
 		}
-		.onChange(of: item) { _, newItem in
+		.onChange(of: item) { oldItem, newItem in
+			flushPendingSave(for: oldItem)
 			editedContent = newItem.rawContent
-			hasChanges = false
 		}
 	}
 
-	private func saveContent() {
-		let content = editedContent
-		let url = item.sourceURL
-		let name = item.name
-		report("Saving \(name)") {
-			try content.write(to: url, atomically: true, encoding: .utf8)
+	private func scheduleAutoSave(content: String) {
+		guard content != item.rawContent else {
+			saveTask?.cancel()
+			pendingSaveURL = nil
+			return
 		}
-		hasChanges = false
+		saveTask?.cancel()
+		let url = item.sourceURL
+		pendingSaveURL = url
+		saveTask = Task {
+			try? await Task.sleep(for: .milliseconds(500))
+			guard !Task.isCancelled else { return }
+			try? content.write(to: url, atomically: true, encoding: .utf8)
+			pendingSaveURL = nil
+		}
+	}
+
+	private func flushPendingSave(for oldItem: ContentItem) {
+		saveTask?.cancel()
+		if pendingSaveURL != nil, editedContent != oldItem.rawContent {
+			try? editedContent.write(to: oldItem.sourceURL, atomically: true, encoding: .utf8)
+		}
+		pendingSaveURL = nil
 	}
 }

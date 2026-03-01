@@ -36,6 +36,9 @@ public struct ContentItem: Identifiable, Hashable, Sendable {
 		self.rawContent = rawContent
 	}
 
+	public static func == (lhs: ContentItem, rhs: ContentItem) -> Bool { lhs.id == rhs.id }
+	public func hash(into hasher: inout Hasher) { hasher.combine(id) }
+
 	public var isMarkdown: Bool {
 		sourceURL.pathExtension.lowercased() == "md"
 	}

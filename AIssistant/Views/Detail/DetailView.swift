@@ -29,7 +29,9 @@ struct DetailView: View {
 						scheduleAutoSave(content: newValue)
 					}
 
-				MarkdownPreviewView(markdown: editedContent)
+				if item.isMarkdown {
+					MarkdownPreviewView(markdown: editedContent)
+				}
 			}
 		}
 		.navigationTitle(item.name)

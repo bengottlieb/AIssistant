@@ -36,6 +36,10 @@ public struct ContentItem: Identifiable, Hashable, Sendable {
 		self.rawContent = rawContent
 	}
 
+	public var isMarkdown: Bool {
+		sourceURL.pathExtension.lowercased() == "md"
+	}
+
 	/// Relative path from the platform's base directory
 	public var relativePath: String {
 		sourceURL.path(percentEncoded: false)

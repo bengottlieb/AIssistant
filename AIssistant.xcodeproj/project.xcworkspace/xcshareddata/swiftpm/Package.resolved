@@ -1,5 +1,5 @@
 {
-  "originHash" : "fccf1a72e3f955973f31d09ec5172941b8df34ae15148b930ac4a8b51e3663cf",
+  "originHash" : "75e1b6bb7db564dae2d46924c2555aaa9599bbc0f3b204f08abfc2e615d40b05",
   "pins" : [
     {
       "identity" : "achtung",
@@ -8,6 +8,15 @@
       "state" : {
         "revision" : "87baf66fd4d9e8d38aae469240866e6ebd61819b",
         "version" : "0.3.18"
+      }
+    },
+    {
+      "identity" : "cloudseeding",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/ios-tooling/cloudseeding",
+      "state" : {
+        "branch" : "main",
+        "revision" : "3f63a033adc9ef5ce821f0ca361bee20925374bb"
       }
     },
     {
@@ -89,6 +98,15 @@
       "state" : {
         "revision" : "4799286537280063c85a32f09884cfbca301b1a1",
         "version" : "602.0.0"
+      }
+    },
+    {
+      "identity" : "syncengine",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/bengottlieb/SyncEngine",
+      "state" : {
+        "branch" : "Main",
+        "revision" : "43e5746c02218146f0107829b0e43e3418e80106"
       }
     }
   ],

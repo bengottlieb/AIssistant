@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		B55BD34A2F5464B20084647A /* SyncEngine in Frameworks */ = {isa = PBXBuildFile; productRef = B55BD3492F5464B20084647A /* SyncEngine */; };
 		B574D9DC2F4F7CDF0015B9A9 /* Internal.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B574D9D62F4F7CDF0015B9A9 /* Internal.framework */; };
 		B574D9DD2F4F7CDF0015B9A9 /* Internal.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = B574D9D62F4F7CDF0015B9A9 /* Internal.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		B574D9E42F4F7D380015B9A9 /* Suite in Frameworks */ = {isa = PBXBuildFile; productRef = B574D9E32F4F7D380015B9A9 /* Suite */; };
@@ -43,6 +44,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		B55BD34B2F5464FB0084647A /* CloudSyncPlan.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = CloudSyncPlan.md; sourceTree = "<group>"; };
 		B574D9C32F4F7CB90015B9A9 /* AIssistant.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AIssistant.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B574D9D62F4F7CDF0015B9A9 /* Internal.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Internal.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -78,6 +80,7 @@
 				B574D9EA2F4F7DA60015B9A9 /* Achtung in Frameworks */,
 				B574D9F02F4F7E430015B9A9 /* Journalist in Frameworks */,
 				B574D9E72F4F7D750015B9A9 /* Convey in Frameworks */,
+				B55BD34A2F5464B20084647A /* SyncEngine in Frameworks */,
 				B574D9E42F4F7D380015B9A9 /* Suite in Frameworks */,
 				B574D9ED2F4F7DD00015B9A9 /* CrossPlatformKit in Frameworks */,
 			);
@@ -86,9 +89,18 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		B55BD34C2F5464FB0084647A /* Misc */ = {
+			isa = PBXGroup;
+			children = (
+				B55BD34B2F5464FB0084647A /* CloudSyncPlan.md */,
+			);
+			path = Misc;
+			sourceTree = "<group>";
+		};
 		B574D9BA2F4F7CB90015B9A9 = {
 			isa = PBXGroup;
 			children = (
+				B55BD34C2F5464FB0084647A /* Misc */,
 				B574D9C52F4F7CB90015B9A9 /* AIssistant */,
 				B574D9D72F4F7CDF0015B9A9 /* Internal */,
 				B574D9C42F4F7CB90015B9A9 /* Products */,
@@ -166,6 +178,7 @@
 				B574D9E92F4F7DA60015B9A9 /* Achtung */,
 				B574D9EC2F4F7DD00015B9A9 /* CrossPlatformKit */,
 				B574D9EF2F4F7E430015B9A9 /* Journalist */,
+				B55BD3492F5464B20084647A /* SyncEngine */,
 			);
 			productName = Internal;
 			productReference = B574D9D62F4F7CDF0015B9A9 /* Internal.framework */;
@@ -205,6 +218,7 @@
 				B574D9EB2F4F7DD00015B9A9 /* XCRemoteSwiftPackageReference "crossplatformkit" */,
 				B574D9EE2F4F7E430015B9A9 /* XCRemoteSwiftPackageReference "journalist" */,
 				B574D9F32F4F80000015B9A9 /* XCRemoteSwiftPackageReference "swift-markdown-ui" */,
+				B55BD3482F5464B20084647A /* XCRemoteSwiftPackageReference "SyncEngine" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = B574D9C42F4F7CB90015B9A9 /* Products */;
@@ -549,6 +563,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		B55BD3482F5464B20084647A /* XCRemoteSwiftPackageReference "SyncEngine" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/bengottlieb/SyncEngine";
+			requirement = {
+				branch = Main;
+				kind = branch;
+			};
+		};
 		B574D9E22F4F7D380015B9A9 /* XCRemoteSwiftPackageReference "Suite" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/ios-tooling/Suite.git";
@@ -600,6 +622,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		B55BD3492F5464B20084647A /* SyncEngine */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = B55BD3482F5464B20084647A /* XCRemoteSwiftPackageReference "SyncEngine" */;
+			productName = SyncEngine;
+		};
 		B574D9E32F4F7D380015B9A9 /* Suite */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = B574D9E22F4F7D380015B9A9 /* XCRemoteSwiftPackageReference "Suite" */;

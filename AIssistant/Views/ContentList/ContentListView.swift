@@ -73,6 +73,10 @@ struct ContentListView: View {
 		if let items = result {
 			let sorted = items.sorted { $0.name.localizedCaseInsensitiveCompare($1.name) == .orderedAscending }
 			loadingState = sorted.isEmpty ? .empty : .loaded(sorted)
+			if let url = viewModel.pendingSelectionURL, let match = sorted.first(where: { $0.id == url }) {
+				viewModel.selectedItem = match
+				viewModel.pendingSelectionURL = nil
+			}
 		} else {
 			loadingState = .empty
 		}

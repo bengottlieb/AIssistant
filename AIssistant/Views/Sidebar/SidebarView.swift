@@ -34,6 +34,20 @@ struct SidebarView: View {
 						.tag(category)
 				}
 			}
+
+			if !viewModel.recentItems.isEmpty {
+				Section("Recents") {
+					ForEach(viewModel.recentItems.prefix(10)) { ref in
+						Button {
+							viewModel.navigateTo(ref)
+						} label: {
+							Label(ref.name, systemImage: ref.category.systemImage)
+								.lineLimit(1)
+						}
+						.buttonStyle(.plain)
+					}
+				}
+			}
 		}
 		.listStyle(.sidebar)
 		.navigationTitle("AIssistant")

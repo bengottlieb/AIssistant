@@ -10,6 +10,7 @@ import Internal
 
 struct ContentView: View {
 	@State private var viewModel = AppViewModel()
+	@State private var cloudCache = CloudStatusCache()
 
 	var body: some View {
 		NavigationSplitView {
@@ -28,6 +29,10 @@ struct ContentView: View {
 			}
 		}
 		.environment(viewModel)
+		.environment(cloudCache)
+		.task {
+			await CloudSyncService.shared.setup()
+		}
 	}
 }
 

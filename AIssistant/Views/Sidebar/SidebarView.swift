@@ -35,5 +35,9 @@ struct SidebarView: View {
 		}
 		.listStyle(.sidebar)
 		.navigationTitle("AIssistant")
+		.safeAreaInset(edge: .bottom) {
+			SyncIndicator()
+				.padding()
+		}
 	}
 }

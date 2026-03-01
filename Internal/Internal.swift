@@ -12,5 +12,6 @@ import Foundation
 @_exported import Achtung
 @_exported import CrossPlatformKit
 @_exported import Convey
+@_exported import SyncEngine
 
 

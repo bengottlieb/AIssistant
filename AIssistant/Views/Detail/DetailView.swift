@@ -13,6 +13,7 @@ struct DetailView: View {
 
 	@State private var editedContent: String = ""
 	@State private var showingTransferSheet = false
+	@State private var showingCloudSheet = false
 	@State private var saveTask: Task<Void, Never>?
 	@State private var pendingSaveURL: URL?
 
@@ -37,6 +38,8 @@ struct DetailView: View {
 		.navigationTitle(item.name)
 		.toolbar {
 			ToolbarItemGroup {
+				CloudToolbarButton(item: item)
+
 				Button {
 					showingTransferSheet = true
 				} label: {

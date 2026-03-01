@@ -14,8 +14,12 @@ struct ContentItemRow: View {
 
 	var body: some View {
 		VStack(alignment: .leading, spacing: 4) {
-			Text(item.name)
-				.font(.headline)
+			HStack {
+				Text(item.name)
+					.font(.headline)
+				Spacer()
+				CloudIndicator(item: item)
+			}
 
 			if let description = item.itemDescription {
 				Text(description)

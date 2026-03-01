@@ -3,7 +3,10 @@
     "allow": [
       "Bash(git -C /Users/ben/Documents/ManagedProjects/MacDev/AIssistant log --oneline)",
       "Bash(git -C /Users/ben/Documents/ManagedProjects/MacDev/AIssistant show --stat 92b4f83)",
-      "Bash(open:*)"
+      "Bash(open:*)",
+      "Bash(grep:*)",
+      "Bash(tail:*)",
+      "Bash(afplay:*)"
     ]
   }
 }

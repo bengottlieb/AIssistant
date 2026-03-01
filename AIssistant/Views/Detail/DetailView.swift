@@ -57,6 +57,12 @@ struct DetailView: View {
 			flushPendingSave(for: oldItem)
 			editedContent = newItem.rawContent
 		}
+		.onReceive(NotificationCenter.default.publisher(for: .cloudReplacedLocalFile)) { notification in
+			guard let url = notification.object as? URL,
+				  url == item.sourceURL,
+				  let content = notification.userInfo?["content"] as? String else { return }
+			editedContent = content
+		}
 	}
 
 	private func scheduleAutoSave(content: String) {

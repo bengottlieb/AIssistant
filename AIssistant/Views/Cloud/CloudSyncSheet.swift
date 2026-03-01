@@ -21,6 +21,10 @@ struct CloudSyncSheet: View {
 		cloudCache.syncStatus(for: item)
 	}
 
+	private var contentMatchesCloud: Bool {
+		cloudCache.cloudContent(for: item) == item.rawContent
+	}
+
 	var body: some View {
 		VStack(spacing: 20) {
 			Text("Cloud Sync: \"\(item.name)\"")
@@ -52,18 +56,19 @@ struct CloudSyncSheet: View {
 			}
 
 			HStack {
-				Button("Cancel") { dismiss() }
+				Button("Close") { dismiss() }
 					.keyboardShortcut(.cancelAction)
 
 				if status != .notBacked {
 					Button("Compare") { showingPreview = true }
+						.disabled(contentMatchesCloud)
 				}
 
 				Button(status == .notBacked ? "Upload" : "Update") {
 					performUpload()
 				}
 				.keyboardShortcut(.defaultAction)
-				.disabled(uploadSuccess)
+				.disabled(uploadSuccess || (status != .notBacked && contentMatchesCloud))
 			}
 		}
 		.padding(24)

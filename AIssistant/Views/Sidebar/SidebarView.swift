@@ -21,9 +21,11 @@ struct SidebarView: View {
 						Text(platform.displayName).tag(platform)
 					}
 				}
+				.labelsHidden()
 				.pickerStyle(.segmented)
 				.listRowSeparator(.hidden)
 				.listRowInsets(EdgeInsets(top: 8, leading: 8, bottom: 4, trailing: 8))
+				.frame(maxWidth: .infinity, alignment: .center)
 			}
 
 			Section {

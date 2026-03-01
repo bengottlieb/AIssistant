@@ -32,7 +32,7 @@ struct CloudIndicator: View {
 	private func cloudIconName(for status: CloudStatusCache.SyncStatus) -> String {
 		switch status {
 		case .notBacked: "cloud"
-		case .synced: "cloud.fill"
+		case .synced: "checkmark.icloud"
 		case .pending: "cloud.fill"
 		}
 	}

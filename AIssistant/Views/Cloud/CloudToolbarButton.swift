@@ -19,7 +19,12 @@ struct CloudToolbarButton: View {
 			showingCloudSheet = true
 		} label: {
 			let status = cloudCache.syncStatus(for: item)
-			Label("Cloud", systemImage: status == .notBacked ? "cloud" : "cloud.fill")
+			let icon = switch status {
+			case .notBacked: "cloud"
+			case .synced: "checkmark.icloud"
+			case .pending: "cloud.fill"
+			}
+			Label("Cloud", systemImage: icon)
 		}
 		.sheet(isPresented: $showingCloudSheet) {
 			CloudSyncSheet(item: item)

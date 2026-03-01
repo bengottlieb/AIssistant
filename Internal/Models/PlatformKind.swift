@@ -15,8 +15,8 @@ public enum PlatformKind: String, CaseIterable, Identifiable, Codable, Sendable 
 
 	public var displayName: String {
 		switch self {
-		case .claudeCode: "Claude Code"
-		case .codex: "OpenAI Codex"
+		case .claudeCode: "Claude"
+		case .codex: "Codex"
 		}
 	}
 

@@ -31,12 +31,11 @@ struct MetadataView: View {
 						.font(.caption)
 						.foregroundStyle(.secondary)
 
-					Text(modified, style: .date)
-						.font(.callout)
-					+ Text(" ")
-						.font(.callout)
-					+ Text(modified, style: .time)
-						.font(.callout)
+					HStack {
+						Text(modified, style: .date)
+						Text(modified, style: .time)
+					}
+					.font(.callout)
 				}
 			}
 

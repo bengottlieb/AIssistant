@@ -56,20 +56,53 @@ public enum FrontmatterParser {
 
 	private static func parseFrontmatterFields(_ lines: [String]) -> [String: String] {
 		var fields: [String: String] = [:]
+		var index = 0
 
-		for line in lines {
+		while index < lines.count {
+			let line = lines[index]
 			let trimmed = line.trimmingCharacters(in: .whitespaces)
-			guard !trimmed.isEmpty else { continue }
-
-			guard let colonIndex = trimmed.firstIndex(of: ":") else { continue }
+			guard !trimmed.isEmpty, let colonIndex = trimmed.firstIndex(of: ":") else {
+				index += 1
+				continue
+			}
 
 			let key = String(trimmed[trimmed.startIndex..<colonIndex]).trimmingCharacters(in: .whitespaces)
 			var value = String(trimmed[trimmed.index(after: colonIndex)...]).trimmingCharacters(in: .whitespaces)
 
-			// Strip surrounding quotes
-			if (value.hasPrefix("\"") && value.hasSuffix("\"")) ||
-				(value.hasPrefix("'") && value.hasSuffix("'")) {
-				value = String(value.dropFirst().dropLast())
+			// Handle YAML block scalars (| for literal, > for folded)
+			if value == "|" || value == ">" {
+				let fold = value == ">"
+				var blockLines: [String] = []
+				index += 1
+
+				// Collect indented continuation lines
+				while index < lines.count {
+					let nextLine = lines[index]
+					let nextTrimmed = nextLine.trimmingCharacters(in: .whitespaces)
+					let isIndented = nextLine.hasPrefix(" ") || nextLine.hasPrefix("\t")
+
+					if nextTrimmed.isEmpty {
+						blockLines.append("")
+						index += 1
+					} else if isIndented {
+						blockLines.append(nextTrimmed)
+						index += 1
+					} else {
+						break
+					}
+				}
+
+				// Trim trailing empty lines
+				while blockLines.last?.isEmpty == true { blockLines.removeLast() }
+
+				value = fold ? blockLines.joined(separator: " ") : blockLines.joined(separator: "\n")
+			} else {
+				// Strip surrounding quotes
+				if (value.hasPrefix("\"") && value.hasSuffix("\"")) ||
+					(value.hasPrefix("'") && value.hasSuffix("'")) {
+					value = String(value.dropFirst().dropLast())
+				}
+				index += 1
 			}
 
 			guard !key.isEmpty else { continue }

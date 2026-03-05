@@ -12,70 +12,91 @@ struct MetadataView: View {
 	let item: ContentItem
 	@State private var isExpanded = false
 
-	private static let extendedThreshold = 120
-
 	var body: some View {
-		let allFields = item.document.map { sortedFields(from: $0.frontmatter) } ?? []
-		let hasExtendedFields = allFields.contains { isExtended($0.value) }
-
-		Grid(alignment: .leadingFirstTextBaseline, horizontalSpacing: 12, verticalSpacing: 6) {
-			GridRow {
-				Text("Path")
-					.font(.caption)
-					.foregroundStyle(.secondary)
-					.gridColumnAlignment(.trailing)
-
-				Text(item.sourceURL.path(percentEncoded: false))
-					.font(.callout)
-					.textSelection(.enabled)
-					.gridColumnAlignment(.leading)
+		Button {
+			withAnimation { isExpanded.toggle() }
+		} label: {
+			if isExpanded {
+				expandedContent
+			} else {
+				collapsedContent
 			}
+		}
+		.buttonStyle(.plain)
+	}
 
-			if let modified = lastModifiedDate {
+	private var collapsedContent: some View {
+		HStack(spacing: 6) {
+			Image(systemName: "chevron.right")
+				.font(.caption2)
+				.foregroundStyle(.tertiary)
+
+			Text(item.name)
+				.font(.callout.bold())
+
+			Text(item.sourceURL.path(percentEncoded: false))
+				.font(.caption)
+				.foregroundStyle(.secondary)
+				.lineLimit(1)
+				.truncationMode(.middle)
+		}
+		.frame(maxWidth: .infinity, alignment: .leading)
+	}
+
+	private var expandedContent: some View {
+		VStack(alignment: .leading, spacing: 0) {
+			HStack(spacing: 6) {
+				Image(systemName: "chevron.down")
+					.font(.caption2)
+					.foregroundStyle(.tertiary)
+
+				Text(item.name)
+					.font(.callout.bold())
+			}
+			.frame(maxWidth: .infinity, alignment: .leading)
+
+			Grid(alignment: .leadingFirstTextBaseline, horizontalSpacing: 12, verticalSpacing: 6) {
 				GridRow {
-					Text("Modified")
+					Text("Path")
 						.font(.caption)
 						.foregroundStyle(.secondary)
+						.gridColumnAlignment(.trailing)
 
-					HStack {
-						Text(modified, style: .date)
-						Text(modified, style: .time)
-					}
-					.font(.callout)
-				}
-			}
-
-			ForEach(allFields, id: \.key) { field in
-				GridRow {
-					Text(field.key)
-						.font(.caption)
-						.foregroundStyle(.secondary)
-
-					Text(isExpanded ? field.value : truncated(field.value))
+					Text(item.sourceURL.path(percentEncoded: false))
 						.font(.callout)
 						.textSelection(.enabled)
+						.gridColumnAlignment(.leading)
 				}
-			}
 
-			if hasExtendedFields {
-				GridRow {
-					Color.clear
-						.gridCellUnsizedAxes([.horizontal, .vertical])
+				if let modified = lastModifiedDate {
+					GridRow {
+						Text("Modified")
+							.font(.caption)
+							.foregroundStyle(.secondary)
 
-					Button {
-						withAnimation { isExpanded.toggle() }
-					} label: {
-						HStack(spacing: 4) {
-							Image(systemName: isExpanded ? "chevron.up" : "chevron.right")
-								.font(.caption2)
-							Text(isExpanded ? "Show less" : "Show more")
-								.font(.caption)
+						HStack {
+							Text(modified, style: .date)
+							Text(modified, style: .time)
 						}
-						.foregroundStyle(.secondary)
+						.font(.callout)
 					}
-					.buttonStyle(.plain)
+				}
+
+				if let frontmatter = item.document?.frontmatter {
+					ForEach(sortedFields(from: frontmatter), id: \.key) { field in
+						GridRow {
+							Text(field.key)
+								.font(.caption)
+								.foregroundStyle(.secondary)
+
+							Text(field.value)
+								.font(.callout)
+								.textSelection(.enabled)
+						}
+					}
 				}
 			}
+			.padding(.top, 6)
 		}
 	}
 
@@ -83,20 +104,6 @@ struct MetadataView: View {
 		try? FileManager.default.attributesOfItem(
 			atPath: item.sourceURL.path(percentEncoded: false)
 		)[.modificationDate] as? Date
-	}
-
-	private func isExtended(_ value: String) -> Bool {
-		value.contains("\n") || value.count > Self.extendedThreshold
-	}
-
-	private func truncated(_ value: String) -> String {
-		guard isExtended(value) else { return value }
-		// Take the first line or first chunk up to the threshold
-		let firstLine = value.prefix(while: { $0 != "\n" })
-		let candidate = firstLine.count > Self.extendedThreshold
-			? firstLine.prefix(Self.extendedThreshold)
-			: firstLine
-		return candidate + "…"
 	}
 
 	private func sortedFields(from frontmatter: Frontmatter) -> [(key: String, value: String)] {

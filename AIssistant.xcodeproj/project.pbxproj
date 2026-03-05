@@ -17,6 +17,7 @@
 		B574D9F02F4F7E430015B9A9 /* Journalist in Frameworks */ = {isa = PBXBuildFile; productRef = B574D9EF2F4F7E430015B9A9 /* Journalist */; };
 		B574D9F12F4F7F000015B9A9 /* Suite in Frameworks */ = {isa = PBXBuildFile; productRef = B574D9F22F4F7F000015B9A9 /* Suite */; };
 		B574D9F52F4F80000015B9A9 /* MarkdownUI in Frameworks */ = {isa = PBXBuildFile; productRef = B574D9F42F4F80000015B9A9 /* MarkdownUI */; };
+		B5F1BAD32F59A4C30074132D /* SharedSettings in Frameworks */ = {isa = PBXBuildFile; productRef = B5F1BAD22F59A4C30074132D /* SharedSettings */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -83,6 +84,7 @@
 				B55BD34A2F5464B20084647A /* SyncEngine in Frameworks */,
 				B574D9E42F4F7D380015B9A9 /* Suite in Frameworks */,
 				B574D9ED2F4F7DD00015B9A9 /* CrossPlatformKit in Frameworks */,
+				B5F1BAD32F59A4C30074132D /* SharedSettings in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -179,6 +181,7 @@
 				B574D9EC2F4F7DD00015B9A9 /* CrossPlatformKit */,
 				B574D9EF2F4F7E430015B9A9 /* Journalist */,
 				B55BD3492F5464B20084647A /* SyncEngine */,
+				B5F1BAD22F59A4C30074132D /* SharedSettings */,
 			);
 			productName = Internal;
 			productReference = B574D9D62F4F7CDF0015B9A9 /* Internal.framework */;
@@ -219,6 +222,7 @@
 				B574D9EE2F4F7E430015B9A9 /* XCRemoteSwiftPackageReference "journalist" */,
 				B574D9F32F4F80000015B9A9 /* XCRemoteSwiftPackageReference "swift-markdown-ui" */,
 				B55BD3482F5464B20084647A /* XCRemoteSwiftPackageReference "SyncEngine" */,
+				B5F1BAD12F59A4C30074132D /* XCRemoteSwiftPackageReference "sharedSettings" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = B574D9C42F4F7CB90015B9A9 /* Products */;
@@ -621,6 +625,14 @@
 				minimumVersion = 2.4.1;
 			};
 		};
+		B5F1BAD12F59A4C30074132D /* XCRemoteSwiftPackageReference "sharedSettings" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/ios-tooling/sharedSettings";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.4;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -663,6 +675,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = B574D9F32F4F80000015B9A9 /* XCRemoteSwiftPackageReference "swift-markdown-ui" */;
 			productName = MarkdownUI;
+		};
+		B5F1BAD22F59A4C30074132D /* SharedSettings */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = B5F1BAD12F59A4C30074132D /* XCRemoteSwiftPackageReference "sharedSettings" */;
+			productName = SharedSettings;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

@@ -10,8 +10,14 @@ import Internal
 
 struct MetadataView: View {
 	let item: ContentItem
+	@State private var isExpanded = false
+
+	private static let extendedThreshold = 120
 
 	var body: some View {
+		let allFields = item.document.map { sortedFields(from: $0.frontmatter) } ?? []
+		let hasExtendedFields = allFields.contains { isExtended($0.value) }
+
 		Grid(alignment: .leadingFirstTextBaseline, horizontalSpacing: 12, verticalSpacing: 6) {
 			GridRow {
 				Text("Path")
@@ -39,17 +45,35 @@ struct MetadataView: View {
 				}
 			}
 
-			if let frontmatter = item.document?.frontmatter {
-				ForEach(sortedFields(from: frontmatter), id: \.key) { field in
-					GridRow {
-						Text(field.key)
-							.font(.caption)
-							.foregroundStyle(.secondary)
+			ForEach(allFields, id: \.key) { field in
+				GridRow {
+					Text(field.key)
+						.font(.caption)
+						.foregroundStyle(.secondary)
 
-						Text(field.value)
-							.font(.callout)
-							.textSelection(.enabled)
+					Text(isExpanded ? field.value : truncated(field.value))
+						.font(.callout)
+						.textSelection(.enabled)
+				}
+			}
+
+			if hasExtendedFields {
+				GridRow {
+					Color.clear
+						.gridCellUnsizedAxes([.horizontal, .vertical])
+
+					Button {
+						withAnimation { isExpanded.toggle() }
+					} label: {
+						HStack(spacing: 4) {
+							Image(systemName: isExpanded ? "chevron.up" : "chevron.right")
+								.font(.caption2)
+							Text(isExpanded ? "Show less" : "Show more")
+								.font(.caption)
+						}
+						.foregroundStyle(.secondary)
 					}
+					.buttonStyle(.plain)
 				}
 			}
 		}
@@ -59,6 +83,20 @@ struct MetadataView: View {
 		try? FileManager.default.attributesOfItem(
 			atPath: item.sourceURL.path(percentEncoded: false)
 		)[.modificationDate] as? Date
+	}
+
+	private func isExtended(_ value: String) -> Bool {
+		value.contains("\n") || value.count > Self.extendedThreshold
+	}
+
+	private func truncated(_ value: String) -> String {
+		guard isExtended(value) else { return value }
+		// Take the first line or first chunk up to the threshold
+		let firstLine = value.prefix(while: { $0 != "\n" })
+		let candidate = firstLine.count > Self.extendedThreshold
+			? firstLine.prefix(Self.extendedThreshold)
+			: firstLine
+		return candidate + "…"
 	}
 
 	private func sortedFields(from frontmatter: Frontmatter) -> [(key: String, value: String)] {

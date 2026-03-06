@@ -7,11 +7,22 @@
 
 import SwiftUI
 import Internal
+import SharedSettings
+
+struct SelectedPlatformKey: SettingsKey {
+	static let defaultValue: PlatformKind = .claudeCode
+	static let name = "selectedPlatform"
+}
+
+struct ViewHistoryKey: SettingsKey {
+	static let defaultValue: [ViewedItemRef] = []
+	static let name = "viewHistory"
+}
 
 @Observable
 class AppViewModel {
 	var selectedPlatform: PlatformKind {
-		didSet { UserDefaults.standard.setCodable(selectedPlatform, forKey: "selectedPlatform") }
+		didSet { SelectedPlatformKey.sharedValue = selectedPlatform }
 	}
 	var selectedCategory: ContentCategoryKind?
 	var selectedItem: ContentItem? {
@@ -21,8 +32,8 @@ class AppViewModel {
 	var pendingSelectionURL: URL?
 
 	init() {
-		let savedHistory = UserDefaults.standard.codable([ViewedItemRef].self, forKey: "viewHistory") ?? []
-		let defaultPlatform = UserDefaults.standard.codable(PlatformKind.self, forKey: "selectedPlatform") ?? .claudeCode
+		let savedHistory = ViewHistoryKey.sharedValue
+		let defaultPlatform = SelectedPlatformKey.sharedValue
 
 		self.selectedPlatform = savedHistory.first?.platformKind ?? defaultPlatform
 		self.recentItems = savedHistory
@@ -44,19 +55,6 @@ class AppViewModel {
 		recentItems.removeAll { $0.sourceURL == item.sourceURL }
 		recentItems.insert(ref, at: 0)
 		if recentItems.count > 50 { recentItems.removeLast() }
-		UserDefaults.standard.setCodable(recentItems, forKey: "viewHistory")
-	}
-}
-
-extension UserDefaults {
-	func setCodable<T: Encodable>(_ value: T, forKey key: String) {
-		if let data = try? JSONEncoder().encode(value) {
-			set(data, forKey: key)
-		}
-	}
-
-	func codable<T: Decodable>(_ type: T.Type, forKey key: String) -> T? {
-		guard let data = data(forKey: key) else { return nil }
-		return try? JSONDecoder().decode(type, from: data)
+		ViewHistoryKey.sharedValue = recentItems
 	}
 }

@@ -10,9 +10,11 @@ import Foundation
 public struct CodexScanner: PlatformScanner {
 	public let platformKind: PlatformKind = .codex
 	public let category: ContentCategoryKind
+	let baseDirectory: URL
 
-	public init(category: ContentCategoryKind) {
+	public init(category: ContentCategoryKind, baseDirectory: URL? = nil) {
 		self.category = category
+		self.baseDirectory = baseDirectory ?? PlatformKind.codex.baseDirectory
 	}
 
 	public nonisolated func scan() async throws -> [ContentItem] {
@@ -25,11 +27,34 @@ public struct CodexScanner: PlatformScanner {
 
 	// MARK: - Skills
 	private nonisolated func scanSkills() throws -> [ContentItem] {
-		let curatedDir = platformKind.baseDirectory.appending(path: "vendor_imports/skills/skills/.curated")
+		let curatedDir = baseDirectory.appending(path: "vendor_imports/skills/skills/.curated")
 		var items: [ContentItem] = []
 		let fm = FileManager.default
 
-		guard fm.fileExists(atPath: curatedDir.path(percentEncoded: false)) else { return [] }
+		// Scan ~/.codex/skills for user-level skills
+		let userSkillsDir = baseDirectory.appending(path: "skills")
+		if fm.fileExists(atPath: userSkillsDir.path(percentEncoded: false)) {
+			let skillFolders = try fm.contentsOfDirectory(at: userSkillsDir, includingPropertiesForKeys: nil)
+			for skillFolder in skillFolders {
+				let skillFile = skillFolder.appending(path: "SKILL.md")
+				guard fm.fileExists(atPath: skillFile.path(percentEncoded: false)) else { continue }
+
+				let content = try String(contentsOf: skillFile, encoding: .utf8)
+				let document = FrontmatterDocument(rawContent: content)
+				let name = document.frontmatter.name ?? skillFolder.lastPathComponent
+				items.append(ContentItem(
+					name: name,
+					itemDescription: document.frontmatter.description,
+					sourceURL: skillFile,
+					category: .skills,
+					platformKind: platformKind,
+					document: document,
+					rawContent: content
+				))
+			}
+		}
+
+		guard fm.fileExists(atPath: curatedDir.path(percentEncoded: false)) else { return items }
 
 		let skillFolders = try fm.contentsOfDirectory(at: curatedDir, includingPropertiesForKeys: nil)
 		for folder in skillFolders {
@@ -56,11 +81,11 @@ public struct CodexScanner: PlatformScanner {
 
 	// MARK: - Agents
 	private nonisolated func scanAgents() throws -> [ContentItem] {
-		let curatedDir = platformKind.baseDirectory.appending(path: "vendor_imports/skills/skills/.curated")
+		let curatedDir = baseDirectory.appending(path: "vendor_imports/skills/skills/.curated")
 		var items: [ContentItem] = []
 		let fm = FileManager.default
 
-		guard fm.fileExists(atPath: curatedDir.path(percentEncoded: false)) else { return [] }
+		guard fm.fileExists(atPath: curatedDir.path(percentEncoded: false)) else { return items }
 
 		let skillFolders = try fm.contentsOfDirectory(at: curatedDir, includingPropertiesForKeys: nil)
 		for folder in skillFolders {

@@ -4,4 +4,14 @@
    <FileRef
       location = "self:">
    </FileRef>
+   <FileRef
+      location = "group:AGENTS.md">
+   </FileRef>
+   <Group
+      location = "group:AIssistantTests"
+      name = "AIssistantTests">
+      <FileRef
+         location = "group:AgentDiscoveryTests.swift">
+      </FileRef>
+   </Group>
 </Workspace>

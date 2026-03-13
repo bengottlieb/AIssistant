@@ -13,13 +13,18 @@ struct ContentItemRow: View {
 	let item: ContentItem
 
 	var body: some View {
-		VStack(alignment: .leading, spacing: 4) {
-			HStack {
-				Text(item.name)
-					.font(.headline)
-				Spacer()
-				CloudIndicator(item: item)
-			}
+			VStack(alignment: .leading, spacing: 4) {
+				HStack {
+					if item.isSkillBundle {
+						Image(systemName: "folder")
+							.font(.subheadline)
+							.foregroundStyle(.secondary)
+					}
+					Text(item.name)
+						.font(.headline)
+					Spacer()
+					CloudIndicator(item: item)
+				}
 
 			if let description = item.itemDescription {
 				Text(description)

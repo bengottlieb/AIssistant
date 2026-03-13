@@ -43,9 +43,16 @@ public struct ContentItem: Identifiable, Hashable, Sendable {
 		sourceURL.pathExtension.lowercased() == "md"
 	}
 
+	public var isSkillBundle: Bool {
+		sourceURL.lastPathComponent == "SKILL.md"
+	}
+
 	/// Relative path from the platform's base directory
 	public var relativePath: String {
-		sourceURL.path(percentEncoded: false)
+		let displayURL = isSkillBundle
+			? sourceURL.deletingLastPathComponent()
+			: sourceURL
+		return displayURL.path(percentEncoded: false)
 			.replacingOccurrences(of: platformKind.baseDirectory.path(percentEncoded: false), with: "~")
 	}
 }

@@ -9,12 +9,17 @@ import Foundation
 
 extension ClaudeCodeScanner {
 	public var watchedDirectories: [URL] {
-		let base = platformKind.baseDirectory
+		let base = baseDirectory
 
 		switch category {
 		case .commands:
 			return [base.appending(path: "commands")]
-		case .skills, .agents:
+		case .skills:
+			return [
+				base.appending(path: "skills"),
+				base.appending(path: "plugins/marketplaces")
+			]
+		case .agents:
 			return [base.appending(path: "plugins/marketplaces")]
 		case .mcpServers, .projectConfigs:
 			return [base]

@@ -55,7 +55,7 @@ public enum TransferService {
 				return base.appending(path: "plugins/local/commands/\(item.name).md")
 			case .mcpServers:
 				return base.appending(path: ".mcp.json")
-			case .projectConfigs:
+			case .projectConfigs, .sharedClaudeMD:
 				return base.appending(path: item.sourceURL.lastPathComponent)
 			}
 
@@ -65,7 +65,7 @@ public enum TransferService {
 				return base.appending(path: "vendor_imports/skills/skills/.curated/\(item.name)/SKILL.md")
 			case .agents:
 				return base.appending(path: "vendor_imports/skills/skills/.curated/\(item.name)/agents/openai.yaml")
-			case .commands, .mcpServers, .projectConfigs:
+			case .commands, .mcpServers, .projectConfigs, .sharedClaudeMD:
 				return base.appending(path: "imported/\(item.sourceURL.lastPathComponent)")
 			}
 		}

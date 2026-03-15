@@ -21,7 +21,7 @@ public struct CodexScanner: PlatformScanner {
 		switch category {
 		case .skills: return try scanSkills()
 		case .agents: return try scanAgents()
-		case .commands, .mcpServers, .projectConfigs: return []
+		case .commands, .mcpServers, .projectConfigs, .sharedClaudeMD: return []
 		}
 	}
 

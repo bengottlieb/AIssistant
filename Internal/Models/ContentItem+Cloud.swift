@@ -25,11 +25,19 @@ public extension PlatformKind {
 }
 
 public extension ContentItem {
+	static let sharedCloudPrefix = "Shared"
+
+	var isSharedClaudeMD: Bool {
+		sourceURL == ContentItem.sharedClaudeMDURL
+	}
+
 	var cloudRecordName: String {
-		"\(platformKind.cloudPrefix)/\(cloudRelativePath)"
+		if isSharedClaudeMD { return "\(Self.sharedCloudPrefix)/CLAUDE.md" }
+		return "\(platformKind.cloudPrefix)/\(cloudRelativePath)"
 	}
 
 	var cloudRelativePath: String {
+		if isSharedClaudeMD { return "CLAUDE.md" }
 		let base = platformKind.baseDirectory.path(percentEncoded: false)
 		return sourceURL.path(percentEncoded: false)
 			.replacingOccurrences(of: base + "/", with: "")

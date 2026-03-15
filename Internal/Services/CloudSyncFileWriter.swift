@@ -9,9 +9,14 @@ import Foundation
 
 public enum CloudSyncFileWriter {
 	public static func writeToLocalDisk(_ file: CachedCloudFile) {
-		guard let platformKind = PlatformKind(cloudPrefix: file.platform) else { return }
+		let fileURL: URL
 
-		let fileURL = platformKind.baseDirectory.appending(path: file.relativePath)
+		if file.platform == ContentItem.sharedCloudPrefix {
+			fileURL = ContentItem.sharedClaudeMDURL
+		} else {
+			guard let platformKind = PlatformKind(cloudPrefix: file.platform) else { return }
+			fileURL = platformKind.baseDirectory.appending(path: file.relativePath)
+		}
 
 		do {
 			try FileManager.default.createDirectory(

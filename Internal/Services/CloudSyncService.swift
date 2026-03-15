@@ -52,7 +52,7 @@ public final class CloudSyncService {
 
 		file.content = item.rawContent
 		file.fileName = item.sourceURL.lastPathComponent
-		file.platform = item.platformKind.cloudPrefix
+		file.platform = item.isSharedClaudeMD ? ContentItem.sharedCloudPrefix : item.platformKind.cloudPrefix
 		file.category = item.category.rawValue
 		file.relativePath = item.cloudRelativePath
 		file.setModifiedAt()

@@ -23,6 +23,8 @@ extension ClaudeCodeScanner {
 			return [base.appending(path: "plugins/marketplaces")]
 		case .mcpServers, .projectConfigs:
 			return [base]
+		case .sharedClaudeMD:
+			return []
 		}
 	}
 }

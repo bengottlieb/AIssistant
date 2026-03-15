@@ -29,10 +29,15 @@ struct SidebarView: View {
 			}
 
 			Section {
-				ForEach(ContentCategoryKind.allCases) { category in
+				ForEach(ContentCategoryKind.sidebarCategories) { category in
 					Label(category.displayName, systemImage: category.systemImage)
 						.tag(category)
 				}
+			}
+
+			Section {
+				Label("CLAUDE.md", systemImage: ContentCategoryKind.sharedClaudeMD.systemImage)
+					.tag(ContentCategoryKind.sharedClaudeMD)
 			}
 
 			if !viewModel.recentItems.isEmpty {

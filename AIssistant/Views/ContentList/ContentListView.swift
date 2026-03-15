@@ -63,6 +63,13 @@ struct ContentListView: View {
 	}
 
 	private func scanItems() async {
+		if category == .sharedClaudeMD {
+			let item = ContentItem.loadSharedClaudeMD()
+			loadingState = .loaded([item])
+			viewModel.selectedItem = item
+			return
+		}
+
 		loadingState = .loading
 		let scanner = platform.scanner(for: category)
 
@@ -83,6 +90,14 @@ struct ContentListView: View {
 	}
 
 	private func startWatching() {
+		if category == .sharedClaudeMD {
+			let homeDir = ContentItem.sharedClaudeMDURL.deletingLastPathComponent()
+			watcher = DirectoryWatcher(directories: [homeDir]) { [self] in
+				refreshID = UUID()
+			}
+			return
+		}
+
 		let scanner = platform.scanner(for: category)
 		let directories = scanner.watchedDirectories
 		guard !directories.isEmpty else { watcher = nil; return }

@@ -24,6 +24,7 @@ public struct ClaudeCodeScanner: PlatformScanner {
 		case .commands: return try scanCommands()
 		case .mcpServers: return try scanMCPServers()
 		case .projectConfigs: return try scanProjectConfigs()
+		case .sharedClaudeMD: return []
 		}
 	}
 

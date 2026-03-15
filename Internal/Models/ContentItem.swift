@@ -52,7 +52,10 @@ public struct ContentItem: Identifiable, Hashable, Sendable {
 		let displayURL = isSkillBundle
 			? sourceURL.deletingLastPathComponent()
 			: sourceURL
-		return displayURL.path(percentEncoded: false)
+		let path = displayURL.path(percentEncoded: false)
+		let homePath = URL.homeDirectory.path(percentEncoded: false)
+		return path
 			.replacingOccurrences(of: platformKind.baseDirectory.path(percentEncoded: false), with: "~")
+			.replacingOccurrences(of: homePath, with: "~/")
 	}
 }

@@ -26,6 +26,7 @@ struct DetailView: View {
 
 			HSplitView {
 				MarkdownEditorView(content: $editedContent)
+					.id(item.sourceURL)
 					.onChange(of: editedContent) { _, newValue in
 						scheduleAutoSave(content: newValue)
 					}

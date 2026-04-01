@@ -45,7 +45,8 @@ struct CloudIndicator: View {
 		case .checking: "cloud"
 		case .notBacked: "cloud"
 		case .synced: "checkmark.icloud"
-		case .pending: "cloud.fill"
+		case .pendingLocalChanges: "icloud.and.arrow.up"
+		case .pendingCloud: "icloud.and.arrow.down"
 		}
 	}
 
@@ -54,7 +55,8 @@ struct CloudIndicator: View {
 		case .checking: .secondary
 		case .notBacked: .secondary
 		case .synced: .blue
-		case .pending: .orange
+		case .pendingLocalChanges: .orange
+		case .pendingCloud: .purple
 		}
 	}
 }

@@ -41,6 +41,7 @@ private struct PlainTextEditor: NSViewRepresentable {
 	}
 
 	func updateNSView(_ nsView: NSScrollView, context: Context) {
+		context.coordinator.text = $text
 		guard let textView = nsView.documentView as? NSTextView else { return }
 		if textView.string != text, !context.coordinator.isEditing {
 			textView.string = text

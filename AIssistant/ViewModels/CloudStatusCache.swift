@@ -16,7 +16,8 @@ class CloudStatusCache {
 		case checking
 		case notBacked
 		case synced
-		case pending
+		case pendingLocalChanges   // local changes queued for upload
+		case pendingCloud          // cloud has a different version to review/download
 	}
 
 	private(set) var hasRefreshed = false
@@ -35,8 +36,14 @@ class CloudStatusCache {
 		}
 
 		if file.changeRecordedAt != nil {
-			return .pending
+			return .pendingLocalChanges
 		}
+
+		if let localContent = try? String(contentsOf: item.sourceURL, encoding: .utf8),
+		   localContent != file.content {
+			return .pendingCloud
+		}
+
 		return .synced
 	}
 

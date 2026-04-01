@@ -83,7 +83,8 @@ struct CloudSyncSheet: View {
 		case .checking: "Checking…"
 		case .notBacked: "Not backed up"
 		case .synced: "Synced"
-		case .pending: "Pending sync"
+		case .pendingLocalChanges: "Local changes pending upload"
+		case .pendingCloud: "Cloud version differs — review needed"
 		}
 	}
 

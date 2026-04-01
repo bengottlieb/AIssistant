@@ -29,7 +29,8 @@ struct CloudToolbarButton: View {
 					case .checking: "cloud"
 					case .notBacked: "cloud"
 					case .synced: "checkmark.icloud"
-					case .pending: "cloud.fill"
+					case .pendingLocalChanges: "icloud.and.arrow.up"
+					case .pendingCloud: "icloud.and.arrow.down"
 					}
 					Label("Cloud", systemImage: icon)
 				}

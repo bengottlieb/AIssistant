@@ -53,12 +53,6 @@ public final class CloudSyncDataSource: SyncEngineDataSource {
     public func didDownloadRecords(_ records: [CKRecord]) async -> [AssetUpdateInfo] {
 		await MainActor.run {
 			let _ = context.handleModifiedCloudRecords(records)
-
-			for record in records {
-				if let file: CachedCloudFile = context[record] {
-					CloudSyncFileWriter.writeToLocalDisk(file)
-				}
-			}
 		}
         return []
 	}

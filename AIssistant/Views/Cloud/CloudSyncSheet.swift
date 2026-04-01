@@ -22,7 +22,8 @@ struct CloudSyncSheet: View {
 	}
 
 	private var contentMatchesCloud: Bool {
-		cloudCache.cloudContent(for: item) == item.rawContent
+		let localContent = (try? String(contentsOf: item.sourceURL, encoding: .utf8)) ?? item.rawContent
+		return cloudCache.cloudContent(for: item) == localContent
 	}
 
 	var body: some View {
@@ -74,7 +75,7 @@ struct CloudSyncSheet: View {
 		.padding(24)
 		.frame(minWidth: 400)
 		.sheet(isPresented: $showingPreview) {
-			CloudPreviewSheet(item: item)
+			CloudPreviewSheet(item: item) { dismiss() }
 		}
 	}
 
@@ -92,5 +93,6 @@ struct CloudSyncSheet: View {
 		uploadError = nil
 		CloudSyncService.shared.upload(item)
 		uploadSuccess = true
+		cloudCache.localFileDidChange()
 	}
 }

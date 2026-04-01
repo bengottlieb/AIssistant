@@ -7,6 +7,8 @@
 
 import SwiftData
 import SyncEngine
+import Suite
+import UniformTypeIdentifiers
 
 @MainActor
 public final class CloudSyncService {
@@ -15,8 +17,14 @@ public final class CloudSyncService {
 	public let container: ModelContainer
 	private var dataSource: CloudSyncDataSource?
 
+    static var directory: URL { URL.applicationSupport.appendingPathComponent(Bundle.main.bundleIdentifier!, isDirectory: true).appendingPathComponent("Database", isDirectory: true) }
+    
 	private init() {
-		container = try! ModelContainer(for: CachedCloudFile.self)
+        let url = Self.directory.appendingPathComponent("database.db", conformingTo: .database)
+        try? FileManager.default.createDirectory(at: url.deletingLastPathComponent(), withIntermediateDirectories: true)
+        let config = ModelConfiguration(url: url, cloudKitDatabase: .none)
+		container = try! ModelContainer(for: CachedCloudFile.self, configurations: config)
+        print("Created database at \(url.path(percentEncoded: false))")
 	}
 
 	public func setup() async {
@@ -25,6 +33,7 @@ public final class CloudSyncService {
 		SyncEngine.instance.registerPersistedTypes(CachedCloudFile.self)
 
 		var config = SyncEngine.Configuration()
+        config.stateDirectory = Self.directory
 		config.identifier = "iCloud.com.standalone.aissistant"
 		config.automaticallySync = true
 		await SyncEngine.instance.setConfiguration(config)

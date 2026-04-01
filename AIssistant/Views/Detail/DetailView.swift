@@ -16,6 +16,7 @@ struct DetailView: View {
 	@State private var showingCloudSheet = false
 	@State private var saveTask: Task<Void, Never>?
 	@State private var pendingSaveURL: URL?
+	@Environment(CloudStatusCache.self) private var cloudCache
 
 	var body: some View {
 		VStack(spacing: 0) {
@@ -80,6 +81,7 @@ struct DetailView: View {
 			guard !Task.isCancelled else { return }
 			try? content.write(to: url, atomically: true, encoding: .utf8)
 			pendingSaveURL = nil
+			await MainActor.run { cloudCache.localFileDidChange() }
 		}
 	}
 

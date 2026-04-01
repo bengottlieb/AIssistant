@@ -14,6 +14,7 @@ extension Notification.Name {
 
 struct CloudPreviewSheet: View {
 	let item: ContentItem
+	var onResolved: (() -> Void)?
 
 	@Environment(\.dismiss) private var dismiss
 	@Environment(CloudStatusCache.self) private var cloudCache
@@ -57,12 +58,16 @@ struct CloudPreviewSheet: View {
 			HStack {
 				Button("Replace Cloud with Local") {
 					CloudSyncService.shared.upload(item)
+					cloudCache.localFileDidChange()
 					dismiss()
+					onResolved?()
 				}
 				Spacer()
 				Button("Replace Local with Cloud") {
 					replaceLocalWithCloud()
+					cloudCache.localFileDidChange()
 					dismiss()
+					onResolved?()
 				}
 				Spacer()
 				Button("Done") { dismiss() }
@@ -73,7 +78,8 @@ struct CloudPreviewSheet: View {
 		.frame(minWidth: 960, minHeight: 680)
 		.task {
 			let cloudText = cloudCache.cloudContent(for: item) ?? ""
-			diff = DiffComputer.compute(local: item.rawContent, cloud: cloudText)
+			let localText = (try? String(contentsOf: item.sourceURL, encoding: .utf8)) ?? item.rawContent
+			diff = DiffComputer.compute(local: localText, cloud: cloudText)
 		}
 	}
 

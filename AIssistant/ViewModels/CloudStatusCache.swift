@@ -21,8 +21,14 @@ class CloudStatusCache {
 	}
 
 	private(set) var hasRefreshed = false
+	private(set) var localChangeCount = 0
+
+	func localFileDidChange() {
+		localChangeCount += 1
+	}
 
 	func syncStatus(for item: ContentItem) -> SyncStatus {
+		_ = localChangeCount
 		if !hasRefreshed { return .checking }
 
 		let context = CloudSyncService.shared.container.mainContext

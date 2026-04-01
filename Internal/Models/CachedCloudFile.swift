@@ -24,7 +24,7 @@ public final class CachedCloudFile: PersistedCKRecord {
 	public var relativePath: String = ""
 
 	public var ckRecordName: String { syncEngineID }
-	public var ckRecordZoneID: CKRecordZone.ID { .default }
+    public var ckRecordZoneID: CKRecordZone.ID { .init(zoneName: "cloud-records") }
     public var uploadedAt: Date?
     public var downloadedAt: Date?
 

@@ -80,6 +80,7 @@ struct CloudSyncSheet: View {
 
 	private var statusText: String {
 		switch status {
+		case .checking: "Checking…"
 		case .notBacked: "Not backed up"
 		case .synced: "Synced"
 		case .pending: "Pending sync"

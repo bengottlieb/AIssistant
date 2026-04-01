@@ -15,16 +15,30 @@ struct CloudToolbarButton: View {
 	@Environment(CloudStatusCache.self) private var cloudCache
 
 	var body: some View {
-		Button {
-			showingCloudSheet = true
-		} label: {
-			let status = cloudCache.syncStatus(for: item)
-			let icon = switch status {
-			case .notBacked: "cloud"
-			case .synced: "checkmark.icloud"
-			case .pending: "cloud.fill"
+		let status = cloudCache.syncStatus(for: item)
+
+		Group {
+			if status == .checking {
+				ProgressView()
+					.controlSize(.small)
+			} else {
+				Button {
+					showingCloudSheet = true
+				} label: {
+					let icon = switch status {
+					case .checking: "cloud"
+					case .notBacked: "cloud"
+					case .synced: "checkmark.icloud"
+					case .pending: "cloud.fill"
+					}
+					Label("Cloud", systemImage: icon)
+				}
 			}
-			Label("Cloud", systemImage: icon)
+		}
+		.contextMenu {
+			Button("Refresh Cloud") {
+				Task { await cloudCache.refresh() }
+			}
 		}
 		.sheet(isPresented: $showingCloudSheet) {
 			CloudSyncSheet(item: item)

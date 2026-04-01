@@ -7,9 +7,13 @@
 
 import SwiftUI
 import Internal
+import Chronicle
 
 @main
 struct AIssistantApp: App {
+    init() {
+        Chronicle.instance.setupSyncEngine()
+    }
 	var body: some Scene {
 		WindowGroup {
 			ContentView()

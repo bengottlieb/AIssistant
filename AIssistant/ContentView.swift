@@ -32,6 +32,7 @@ struct ContentView: View {
 		.environment(cloudCache)
 		.task {
 			await CloudSyncService.shared.setup()
+			await cloudCache.refresh()
 		}
 	}
 }

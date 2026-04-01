@@ -48,6 +48,7 @@
 		B55BD34B2F5464FB0084647A /* CloudSyncPlan.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = CloudSyncPlan.md; sourceTree = "<group>"; };
 		B574D9C32F4F7CB90015B9A9 /* AIssistant.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AIssistant.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B574D9D62F4F7CDF0015B9A9 /* Internal.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Internal.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		B5EF08DB2F7CBFCB008E5019 /* SyncEngine */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = SyncEngine; path = /Users/ben/Documents/ManagedProjects/Frameworks/SyncEngine; sourceTree = "<absolute>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -102,6 +103,7 @@
 		B574D9BA2F4F7CB90015B9A9 = {
 			isa = PBXGroup;
 			children = (
+				B5EF08DB2F7CBFCB008E5019 /* SyncEngine */,
 				B55BD34C2F5464FB0084647A /* Misc */,
 				B574D9C52F4F7CB90015B9A9 /* AIssistant */,
 				B574D9D72F4F7CDF0015B9A9 /* Internal */,

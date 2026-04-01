@@ -9,29 +9,25 @@ import SwiftData
 import SyncEngine
 
 public final class CloudSyncDataSource: SyncEngineDataSource {
-	public func zoneSyncStarted(_ zoneID: CKRecordZone.ID) {
-	}
-	
-	public func zoneSyncCompleted(_ zoneID: CKRecordZone.ID) {
-	}
-	
 	let container: ModelContainer
 
 	public init(container: ModelContainer) {
 		self.container = container
+        print(self.container.configurations.first!)
 	}
 
 	@MainActor private var context: ModelContext { container.mainContext }
 
-	public func pendingModifications(batchSize: Int) async -> [CKRecord] {
+	public func pendingModifications(batchSize: Int?) async -> [CKRecord] {
 		await MainActor.run {
 			let modified = context.modifiedModels(CachedCloudFile.self)
+            guard let batchSize else { return modified.map { $0.ckRecord }}
 			return Array(modified.prefix(batchSize)).map { $0.ckRecord }
 		}
 	}
 
 	public func resolveConflict(with record: CKRecord) async {
-		await MainActor.run {
+		_ = await MainActor.run {
 			context.handleModifiedCloudRecords([record])
 		}
 	}
@@ -54,9 +50,9 @@ public final class CloudSyncDataSource: SyncEngineDataSource {
 		}
 	}
 	
-	public func modifiedRecords(_ records: [CKRecord]) async {
+    public func didDownloadRecords(_ records: [CKRecord]) async -> [AssetUpdateInfo] {
 		await MainActor.run {
-			context.handleModifiedCloudRecords(records)
+			let _ = context.handleModifiedCloudRecords(records)
 
 			for record in records {
 				if let file: CachedCloudFile = context[record] {
@@ -64,6 +60,7 @@ public final class CloudSyncDataSource: SyncEngineDataSource {
 				}
 			}
 		}
+        return []
 	}
 	
 	public func existingRecord(matching id: CKRecord.ID) async -> CKRecord? {
@@ -72,6 +69,27 @@ public final class CloudSyncDataSource: SyncEngineDataSource {
 			return existing?.ckRecord
 		}
 	}
-
+    
+    public func pendingAssets() async -> [AssetUpdateInfo] { [] }
+    
+    public func didDownloadAsset(_ record: CKRecord, forParentID: String) async { }
+    
+    public func didUploadAsset(_ record: CKRecord, forParentID: String) async { }
+    
+    public func record(matching: CKRecord.ID) async -> CKRecord? {
+        await MainActor.run {
+            let existing: CachedCloudFile? = context[matching.recordName]
+            if let record = existing?.ckRecord { return record }
+            
+            return existing?.ckRecord
+        }
+    }
+    
+    public func syncCompleted(withError: (any Error)?) async { }
+    
+    public func zoneSyncStarted(_ zoneID: CKRecordZone.ID) { }
+    
+    public func zoneSyncCompleted(_ zoneID: CKRecordZone.ID) { }
+    
 	public func didFinishLoadingRecords() async { }
 }

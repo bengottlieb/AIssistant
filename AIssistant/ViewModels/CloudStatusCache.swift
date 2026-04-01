@@ -8,16 +8,22 @@
 import SwiftUI
 import SwiftData
 import Internal
+import SyncEngine
 
 @Observable
 class CloudStatusCache {
 	enum SyncStatus {
+		case checking
 		case notBacked
 		case synced
 		case pending
 	}
 
+	private(set) var hasRefreshed = false
+
 	func syncStatus(for item: ContentItem) -> SyncStatus {
+		if !hasRefreshed { return .checking }
+
 		let context = CloudSyncService.shared.container.mainContext
 		let recordName = item.cloudRecordName
 
@@ -32,6 +38,16 @@ class CloudStatusCache {
 			return .pending
 		}
 		return .synced
+	}
+
+	func refresh() async {
+		hasRefreshed = false
+		do {
+			try await SyncEngine.instance.sync()
+		} catch {
+			print("Cloud refresh failed: \(error)")
+		}
+		hasRefreshed = true
 	}
 
 	func cloudContent(for item: ContentItem) -> String? {

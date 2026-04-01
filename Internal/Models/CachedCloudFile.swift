@@ -25,6 +25,8 @@ public final class CachedCloudFile: PersistedCKRecord {
 
 	public var ckRecordName: String { syncEngineID }
 	public var ckRecordZoneID: CKRecordZone.ID { .default }
+    public var uploadedAt: Date?
+    public var downloadedAt: Date?
 
 	public required init() { }
 
@@ -48,4 +50,18 @@ public final class CachedCloudFile: PersistedCKRecord {
 	public func resolveConflict(with cloudRecord: CKRecord, newer: NewerRecord, context: ModelContext) {
 		_ = load(fromCloud: cloudRecord, context: context)
 	}
+    
+    public static func fetchDescriptor(forSyncEngineID id: String) -> FetchDescriptor<CachedCloudFile> {
+        FetchDescriptor<CachedCloudFile>(predicate: #Predicate { $0.syncEngineID == id })
+    }
+
+    public static func modifiedRecordsFetchDescriptor() -> FetchDescriptor<CachedCloudFile> {
+        FetchDescriptor<CachedCloudFile>(predicate: #Predicate { $0.changeRecordedAt != nil })
+    }
+
+    public static func syncFlagResetFetchDescriptor() -> FetchDescriptor<CachedCloudFile> {
+        FetchDescriptor<CachedCloudFile>()
+    }
+
+
 }

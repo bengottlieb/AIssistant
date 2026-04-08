@@ -23,8 +23,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/ios-tooling/Chronicle",
       "state" : {
-        "revision" : "7b7f1cb265a1a14e41103879834ad1765416d0e1",
-        "version" : "0.0.12"
+        "revision" : "9462a9c5c50dc8ac09f1a455584eccb0b4628076",
+        "version" : "0.0.22"
       }
     },
     {
@@ -61,15 +61,6 @@
       "state" : {
         "revision" : "edea215f996a058e44bd5f0835c4b89df850a9c9",
         "version" : "1.0.10"
-      }
-    },
-    {
-      "identity" : "journalist",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/ios-tooling/journalist",
-      "state" : {
-        "revision" : "a4830f26ff8c3a817669d5e7fbe21a1db77fcb9a",
-        "version" : "1.0.13"
       }
     },
     {
@@ -131,8 +122,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/ios-tooling/TagAlong",
       "state" : {
-        "revision" : "84c430a287e2b582b7fb02fda50b9a9c4e3aa710",
-        "version" : "0.0.3"
+        "revision" : "f7ddf6ae68e18703c209923210e8a713beb280f3",
+        "version" : "0.0.4"
       }
     }
   ],

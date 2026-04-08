@@ -84,8 +84,8 @@ struct CloudSyncSheet: View {
 		case .checking: "Checking…"
 		case .notBacked: "Not backed up"
 		case .synced: "Synced"
-		case .pendingLocalChanges: "Local changes pending upload"
-		case .pendingCloud: "Cloud version differs — review needed"
+		case .localNewer: "Local changes not yet uploaded"
+		case .cloudNewer: "iCloud has a newer version"
 		}
 	}
 

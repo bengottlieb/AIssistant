@@ -7,6 +7,7 @@
 
 import SwiftUI
 import Internal
+import Chronicle
 
 struct ContentListView: View {
 	let platform: PlatformKind
@@ -72,10 +73,12 @@ struct ContentListView: View {
 
 		loadingState = .loading
 		let scanner = platform.scanner(for: category)
-
-		let result: [ContentItem]? = await report("Scanning \(platform.displayName) \(category.displayName)") {
-			try await scanner.scan()
-		}
+        var result: [ContentItem]?
+        do {
+            result = try await scanner.scan()
+        } catch {
+            Chronicle.error(error, description: "Failed to scan \(platform.displayName) \(category.displayName)")
+        }
 
 		if let items = result {
 			let sorted = items.sorted { $0.name.localizedCaseInsensitiveCompare($1.name) == .orderedAscending }

@@ -14,7 +14,6 @@
 		B574D9E72F4F7D750015B9A9 /* Convey in Frameworks */ = {isa = PBXBuildFile; productRef = B574D9E62F4F7D750015B9A9 /* Convey */; };
 		B574D9EA2F4F7DA60015B9A9 /* Achtung in Frameworks */ = {isa = PBXBuildFile; productRef = B574D9E92F4F7DA60015B9A9 /* Achtung */; };
 		B574D9ED2F4F7DD00015B9A9 /* CrossPlatformKit in Frameworks */ = {isa = PBXBuildFile; productRef = B574D9EC2F4F7DD00015B9A9 /* CrossPlatformKit */; };
-		B574D9F02F4F7E430015B9A9 /* Journalist in Frameworks */ = {isa = PBXBuildFile; productRef = B574D9EF2F4F7E430015B9A9 /* Journalist */; };
 		B574D9F12F4F7F000015B9A9 /* Suite in Frameworks */ = {isa = PBXBuildFile; productRef = B574D9F22F4F7F000015B9A9 /* Suite */; };
 		B574D9F52F4F80000015B9A9 /* MarkdownUI in Frameworks */ = {isa = PBXBuildFile; productRef = B574D9F42F4F80000015B9A9 /* MarkdownUI */; };
 		B5F1BAD32F59A4C30074132D /* SharedSettings in Frameworks */ = {isa = PBXBuildFile; productRef = B5F1BAD22F59A4C30074132D /* SharedSettings */; };
@@ -80,7 +79,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				B574D9EA2F4F7DA60015B9A9 /* Achtung in Frameworks */,
-				B574D9F02F4F7E430015B9A9 /* Journalist in Frameworks */,
 				B574D9E72F4F7D750015B9A9 /* Convey in Frameworks */,
 				B55BD34A2F5464B20084647A /* SyncEngine in Frameworks */,
 				B574D9E42F4F7D380015B9A9 /* Suite in Frameworks */,
@@ -181,7 +179,6 @@
 				B574D9E62F4F7D750015B9A9 /* Convey */,
 				B574D9E92F4F7DA60015B9A9 /* Achtung */,
 				B574D9EC2F4F7DD00015B9A9 /* CrossPlatformKit */,
-				B574D9EF2F4F7E430015B9A9 /* Journalist */,
 				B55BD3492F5464B20084647A /* SyncEngine */,
 				B5F1BAD22F59A4C30074132D /* SharedSettings */,
 			);
@@ -221,7 +218,6 @@
 				B574D9E52F4F7D750015B9A9 /* XCRemoteSwiftPackageReference "Convey" */,
 				B574D9E82F4F7DA60015B9A9 /* XCRemoteSwiftPackageReference "achtung" */,
 				B574D9EB2F4F7DD00015B9A9 /* XCRemoteSwiftPackageReference "crossplatformkit" */,
-				B574D9EE2F4F7E430015B9A9 /* XCRemoteSwiftPackageReference "journalist" */,
 				B574D9F32F4F80000015B9A9 /* XCRemoteSwiftPackageReference "swift-markdown-ui" */,
 				B55BD3482F5464B20084647A /* XCRemoteSwiftPackageReference "SyncEngine" */,
 				B5F1BAD12F59A4C30074132D /* XCRemoteSwiftPackageReference "sharedSettings" */,
@@ -621,14 +617,6 @@
 				minimumVersion = 1.1.0;
 			};
 		};
-		B574D9EE2F4F7E430015B9A9 /* XCRemoteSwiftPackageReference "journalist" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/ios-tooling/journalist";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 1.0.13;
-			};
-		};
 		B574D9F32F4F80000015B9A9 /* XCRemoteSwiftPackageReference "swift-markdown-ui" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/gonzalezreal/swift-markdown-ui";
@@ -672,11 +660,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = B574D9EB2F4F7DD00015B9A9 /* XCRemoteSwiftPackageReference "crossplatformkit" */;
 			productName = CrossPlatformKit;
-		};
-		B574D9EF2F4F7E430015B9A9 /* Journalist */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = B574D9EE2F4F7E430015B9A9 /* XCRemoteSwiftPackageReference "journalist" */;
-			productName = Journalist;
 		};
 		B574D9F22F4F7F000015B9A9 /* Suite */ = {
 			isa = XCSwiftPackageProductDependency;

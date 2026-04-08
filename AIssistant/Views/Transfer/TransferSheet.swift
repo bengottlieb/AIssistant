@@ -7,6 +7,7 @@
 
 import SwiftUI
 import Internal
+import Chronicle
 
 struct TransferSheet: View {
 	let item: ContentItem
@@ -79,11 +80,14 @@ struct TransferSheet: View {
 
 	private func performTransfer() {
 		transferError = nil
-		let currentItem = item
+        var result: URL?
+        let currentItem = item
 		let platform = targetPlatform
-		let result: URL? = report("Transferring \(currentItem.name) to \(platform.displayName)") {
-			try TransferService.transfer(currentItem, to: platform)
-		}
+        do {
+			result = try TransferService.transfer(currentItem, to: platform)
+        } catch {
+            Chronicle.error(error, description: "Problem transfering files")
+        }
 		if result != nil {
 			transferSuccess = true
 		} else {

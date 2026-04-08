@@ -20,16 +20,12 @@ struct CloudIndicator: View {
 		Button {
 			showingCloudSheet = true
 		} label: {
-			if status == .checking {
-				ProgressView()
-					.controlSize(.small)
-			} else {
-				Image(systemName: cloudIconName(for: status))
-					.foregroundStyle(cloudColor(for: status))
-					.font(.caption)
-			}
+			Image(systemName: iconName(for: status))
+				.foregroundStyle(iconColor(for: status))
+				.font(.caption)
 		}
 		.buttonStyle(.plain)
+		.disabled(status == .checking)
 		.contextMenu {
 			Button("Refresh Cloud") {
 				Task { await cloudCache.refresh() }
@@ -40,23 +36,23 @@ struct CloudIndicator: View {
 		}
 	}
 
-	private func cloudIconName(for status: CloudStatusCache.SyncStatus) -> String {
+	private func iconName(for status: CloudStatusCache.SyncStatus) -> String {
 		switch status {
-		case .checking: "cloud"
-		case .notBacked: "cloud"
+		case .checking: "icloud"
+		case .notBacked: "xmark.icloud"
 		case .synced: "checkmark.icloud"
-		case .pendingLocalChanges: "icloud.and.arrow.up"
-		case .pendingCloud: "icloud.and.arrow.down"
+		case .localNewer: "icloud.and.arrow.up"
+		case .cloudNewer: "icloud.and.arrow.down"
 		}
 	}
 
-	private func cloudColor(for status: CloudStatusCache.SyncStatus) -> Color {
+	private func iconColor(for status: CloudStatusCache.SyncStatus) -> Color {
 		switch status {
 		case .checking: .secondary
-		case .notBacked: .secondary
-		case .synced: .blue
-		case .pendingLocalChanges: .orange
-		case .pendingCloud: .purple
+		case .notBacked: .red
+		case .synced: .green
+		case .cloudNewer: .yellow
+		case .localNewer: .orange
 		}
 	}
 }

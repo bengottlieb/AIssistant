@@ -59,7 +59,7 @@ public final class CloudSyncService {
 			context.insert(file)
 		}
 
-		file.content = item.rawContent
+		file.content = (try? String(contentsOf: item.sourceURL, encoding: .utf8)) ?? item.rawContent
 		file.fileName = item.sourceURL.lastPathComponent
 		file.platform = item.isSharedClaudeMD ? ContentItem.sharedCloudPrefix : item.platformKind.cloudPrefix
 		file.category = item.category.rawValue

@@ -19,10 +19,29 @@ struct AIssistantApp: App {
 			ContentView()
 		}
 		.defaultSize(width: 1000, height: 650)
+		.commands {
+			ChronicleCommands()
+		}
+
+		Window("SyncEngine Chronicle", id: "chronicle") {
+			ChronicleScreen()
+		}
+		.defaultSize(width: 800, height: 600)
 
 		Settings {
-			PaperOfRecordView()
-				.frame(minWidth: 500, minHeight: 400)
+		}
+	}
+}
+
+struct ChronicleCommands: Commands {
+	@Environment(\.openWindow) private var openWindow
+
+	var body: some Commands {
+		CommandGroup(after: .windowArrangement) {
+			Button("SyncEngine Chronicle") {
+				openWindow(id: "chronicle")
+			}
+			.keyboardShortcut("L", modifiers: [.command, .shift])
 		}
 	}
 }

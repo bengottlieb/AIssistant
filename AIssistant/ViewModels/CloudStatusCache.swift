@@ -16,8 +16,8 @@ class CloudStatusCache {
 		case checking
 		case notBacked
 		case synced
-		case pendingLocalChanges   // local changes queued for upload
-		case pendingCloud          // cloud has a different version to review/download
+		case localNewer
+		case cloudNewer
 	}
 
 	private(set) var hasRefreshed = false
@@ -41,16 +41,13 @@ class CloudStatusCache {
 			return .notBacked
 		}
 
-		if file.changeRecordedAt != nil {
-			return .pendingLocalChanges
-		}
+		let localContent = (try? String(contentsOf: item.sourceURL, encoding: .utf8)) ?? ""
+		if localContent == file.content { return .synced }
 
-		if let localContent = try? String(contentsOf: item.sourceURL, encoding: .utf8),
-		   localContent != file.content {
-			return .pendingCloud
-		}
+		let localModDate = (try? FileManager.default.attributesOfItem(atPath: item.sourceURL.path)[.modificationDate] as? Date) ?? .distantPast
+		let cloudModDate = file.modifiedAt
 
-		return .synced
+		return localModDate > cloudModDate ? .localNewer : .cloudNewer
 	}
 
 	func refresh() async {

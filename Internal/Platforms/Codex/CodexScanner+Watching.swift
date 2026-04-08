@@ -15,7 +15,7 @@ extension CodexScanner {
 				baseDirectory.appending(path: "skills"),
 				baseDirectory.appending(path: "vendor_imports/skills/skills/.curated")
 			]
-		case .agents:
+		case .plugins, .agents:
 			return [baseDirectory.appending(path: "vendor_imports/skills/skills/.curated")]
 		case .commands, .mcpServers, .projectConfigs, .sharedClaudeMD:
 			return []

@@ -32,8 +32,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/ios-tooling/cloudseeding",
       "state" : {
-        "revision" : "16c52ead007e21e401770c9c71484d9702c9d254",
-        "version" : "0.1.6"
+        "revision" : "90dacef0916885b379c03b72330a876eb5c45873",
+        "version" : "0.1.7"
       }
     },
     {

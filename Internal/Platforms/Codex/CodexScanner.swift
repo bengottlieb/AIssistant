@@ -21,27 +21,25 @@ public struct CodexScanner: PlatformScanner {
 		switch category {
 		case .skills: return try scanSkills()
 		case .agents: return try scanAgents()
-		case .commands, .mcpServers, .projectConfigs, .sharedClaudeMD: return []
+		case .plugins, .commands, .mcpServers, .projectConfigs, .sharedClaudeMD: return []
 		}
 	}
 
-	// MARK: - Skills
+	// MARK: - Skills (installed + curated/available)
 	private nonisolated func scanSkills() throws -> [ContentItem] {
-		let curatedDir = baseDirectory.appending(path: "vendor_imports/skills/skills/.curated")
 		var items: [ContentItem] = []
+		var installedNames: Set<String> = []
 		let fm = FileManager.default
 
-		// Scan ~/.codex/skills for user-level skills
 		let userSkillsDir = baseDirectory.appending(path: "skills")
 		if fm.fileExists(atPath: userSkillsDir.path(percentEncoded: false)) {
-			let skillFolders = try fm.contentsOfDirectory(at: userSkillsDir, includingPropertiesForKeys: nil)
-			for skillFolder in skillFolders {
+			for skillFolder in try fm.contentsOfDirectory(at: userSkillsDir, includingPropertiesForKeys: nil) {
 				let skillFile = skillFolder.appending(path: "SKILL.md")
 				guard fm.fileExists(atPath: skillFile.path(percentEncoded: false)) else { continue }
-
 				let content = try String(contentsOf: skillFile, encoding: .utf8)
 				let document = FrontmatterDocument(rawContent: content)
 				let name = document.frontmatter.name ?? skillFolder.lastPathComponent
+				installedNames.insert(name)
 				items.append(ContentItem(
 					name: name,
 					itemDescription: document.frontmatter.description,
@@ -49,22 +47,22 @@ public struct CodexScanner: PlatformScanner {
 					category: .skills,
 					platformKind: platformKind,
 					document: document,
-					rawContent: content
+					rawContent: content,
+					isInstalled: true
 				))
 			}
 		}
 
+		let curatedDir = baseDirectory.appending(path: "vendor_imports/skills/skills/.curated")
 		guard fm.fileExists(atPath: curatedDir.path(percentEncoded: false)) else { return items }
 
-		let skillFolders = try fm.contentsOfDirectory(at: curatedDir, includingPropertiesForKeys: nil)
-		for folder in skillFolders {
+		for folder in try fm.contentsOfDirectory(at: curatedDir, includingPropertiesForKeys: nil) {
 			let skillFile = folder.appending(path: "SKILL.md")
 			guard fm.fileExists(atPath: skillFile.path(percentEncoded: false)) else { continue }
-
 			let content = try String(contentsOf: skillFile, encoding: .utf8)
 			let document = FrontmatterDocument(rawContent: content)
 			let name = document.frontmatter.name ?? folder.lastPathComponent
-
+			guard !installedNames.contains(name) else { continue }
 			items.append(ContentItem(
 				name: name,
 				itemDescription: document.frontmatter.description,
@@ -72,10 +70,10 @@ public struct CodexScanner: PlatformScanner {
 				category: .skills,
 				platformKind: platformKind,
 				document: document,
-				rawContent: content
+				rawContent: content,
+				isInstalled: false
 			))
 		}
-
 		return items
 	}
 
@@ -87,16 +85,12 @@ public struct CodexScanner: PlatformScanner {
 
 		guard fm.fileExists(atPath: curatedDir.path(percentEncoded: false)) else { return items }
 
-		let skillFolders = try fm.contentsOfDirectory(at: curatedDir, includingPropertiesForKeys: nil)
-		for folder in skillFolders {
+		for folder in try fm.contentsOfDirectory(at: curatedDir, includingPropertiesForKeys: nil) {
 			let agentFile = folder.appending(path: "agents/openai.yaml")
 			guard fm.fileExists(atPath: agentFile.path(percentEncoded: false)) else { continue }
-
 			let content = try String(contentsOf: agentFile, encoding: .utf8)
-			let name = folder.lastPathComponent
-
 			items.append(ContentItem(
-				name: name,
+				name: folder.lastPathComponent,
 				itemDescription: "Codex agent configuration",
 				sourceURL: agentFile,
 				category: .agents,
@@ -104,7 +98,6 @@ public struct CodexScanner: PlatformScanner {
 				rawContent: content
 			))
 		}
-
 		return items
 	}
 }

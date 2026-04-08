@@ -59,13 +59,19 @@ struct ContentItemRow: View {
 				Divider()
 
 				if isInUserCommandsDirectory {
-					Button("Deactivate Command") {
-						deactivateCommand()
-					}
+					Button("Deactivate Command") { deactivateCommand() }
 				} else {
-					Button("Activate Command") {
-						activateCommand()
-					}
+					Button("Activate Command") { activateCommand() }
+				}
+			}
+
+			if item.category == .skills {
+				Divider()
+
+				if item.isInstalled {
+					Button("Uninstall Skill") { uninstallSkill() }
+				} else {
+					Button("Install Skill") { installSkill() }
 				}
 			}
 		}

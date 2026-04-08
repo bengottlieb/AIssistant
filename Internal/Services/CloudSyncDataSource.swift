@@ -26,12 +26,11 @@ public final class CloudSyncDataSource: SyncEngineDataSource {
 		}
 	}
 
-	public func resolveConflict(with record: CKRecord) async {
-		_ = await MainActor.run {
-			context.handleModifiedCloudRecords([record])
-		}
+	public func resolveConflict(clientRecord: CKRecord, serverRecord: CKRecord) async {
+		let serverIsNewer = (serverRecord.modificationDate ?? .distantPast) > (clientRecord.modificationDate ?? .distantPast)
+		print("Conflict in records,  \(serverIsNewer ? "Server is newer" : "Local is newer")\n\n\(clientRecord), vs. \(serverRecord).")
 	}
-
+	
 	public func markRecordSaved(_ record: CKRecord) async {
 		await MainActor.run {
 			if let file: CachedCloudFile = context[record] {

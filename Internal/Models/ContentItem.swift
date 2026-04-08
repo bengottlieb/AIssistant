@@ -16,6 +16,7 @@ public struct ContentItem: Identifiable, Hashable, Sendable {
 	public let platformKind: PlatformKind
 	public let document: FrontmatterDocument?
 	public let rawContent: String
+	public let isInstalled: Bool
 
 	public init(
 		name: String,
@@ -24,7 +25,8 @@ public struct ContentItem: Identifiable, Hashable, Sendable {
 		category: ContentCategoryKind,
 		platformKind: PlatformKind,
 		document: FrontmatterDocument? = nil,
-		rawContent: String
+		rawContent: String,
+		isInstalled: Bool = true
 	) {
 		self.id = sourceURL
 		self.name = name
@@ -34,6 +36,7 @@ public struct ContentItem: Identifiable, Hashable, Sendable {
 		self.platformKind = platformKind
 		self.document = document
 		self.rawContent = rawContent
+		self.isInstalled = isInstalled
 	}
 
 	public static func == (lhs: ContentItem, rhs: ContentItem) -> Bool { lhs.id == rhs.id }

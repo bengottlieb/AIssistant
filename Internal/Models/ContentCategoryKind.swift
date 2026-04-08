@@ -9,6 +9,7 @@ import Foundation
 
 public enum ContentCategoryKind: String, CaseIterable, Identifiable, Codable, Sendable {
 	case skills
+	case plugins
 	case agents
 	case commands
 	case mcpServers
@@ -25,6 +26,7 @@ public enum ContentCategoryKind: String, CaseIterable, Identifiable, Codable, Se
 	public var displayName: String {
 		switch self {
 		case .skills: "Skills"
+		case .plugins: "Plugins"
 		case .agents: "Agents"
 		case .commands: "Commands"
 		case .mcpServers: "MCP Servers"
@@ -33,9 +35,18 @@ public enum ContentCategoryKind: String, CaseIterable, Identifiable, Codable, Se
 		}
 	}
 
+	/// Whether the list should split items into Installed / Available sections.
+	public var usesSections: Bool {
+		switch self {
+		case .skills, .commands, .mcpServers: true
+		default: false
+		}
+	}
+
 	public var systemImage: String {
 		switch self {
 		case .skills: "star.fill"
+		case .plugins: "puzzlepiece.extension.fill"
 		case .agents: "person.fill"
 		case .commands: "terminal.fill"
 		case .mcpServers: "server.rack"

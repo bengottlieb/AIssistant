@@ -45,12 +45,29 @@ struct ContentListView: View {
 				.frame(maxWidth: .infinity, maxHeight: .infinity)
 
 			case .loaded(let items):
-				List(items, selection: Binding(
+				let binding = Binding(
 					get: { viewModel.selectedItem },
 					set: { viewModel.selectedItem = $0 }
-				)) { item in
-					ContentItemRow(item: item)
-						.tag(item)
+				)
+				if category.usesSections {
+					let installed = items.filter { $0.isInstalled }
+					let others = items.filter { !$0.isInstalled }
+					List(selection: binding) {
+						if !installed.isEmpty {
+							Section("Installed") {
+								ForEach(installed) { item in ContentItemRow(item: item).tag(item) }
+							}
+						}
+						if !others.isEmpty {
+							Section("Available") {
+								ForEach(others) { item in ContentItemRow(item: item).tag(item) }
+							}
+						}
+					}
+				} else {
+					List(items, selection: binding) { item in
+						ContentItemRow(item: item).tag(item)
+					}
 				}
 			}
 		}
@@ -61,6 +78,10 @@ struct ContentListView: View {
 		.onAppear { startWatching() }
 		.onChange(of: platform) { startWatching() }
 		.onChange(of: category) { startWatching() }
+		.onReceive(NotificationCenter.default.publisher(for: .skillInstallStateChanged)) { _ in
+			startWatching()
+			refreshID = UUID()
+		}
 	}
 
 	private func scanItems() async {

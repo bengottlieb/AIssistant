@@ -20,6 +20,7 @@ public struct ClaudeCodeScanner: PlatformScanner {
 	public nonisolated func scan() async throws -> [ContentItem] {
 		switch category {
 		case .skills: return try scanSkills()
+		case .plugins: return try scanPluginPackages()
 		case .agents: return try scanAgents()
 		case .commands: return try scanCommands()
 		case .mcpServers: return try scanMCPServers()
@@ -28,47 +29,80 @@ public struct ClaudeCodeScanner: PlatformScanner {
 		}
 	}
 
-	// MARK: - Skills
+	// MARK: - Skills (installed + available from plugins)
 	private nonisolated func scanSkills() throws -> [ContentItem] {
-		let pluginsDir = baseDirectory.appending(path: "plugins/marketplaces")
 		var items: [ContentItem] = []
+		var installedNames: Set<String> = []
 		let fm = FileManager.default
 
-		// Scan ~/.claude/skills for user-level skills
 		let userSkillsDir = baseDirectory.appending(path: "skills")
 		if fm.fileExists(atPath: userSkillsDir.path(percentEncoded: false)) {
-			let skillFolders = try fm.contentsOfDirectory(at: userSkillsDir, includingPropertiesForKeys: nil)
-			for skillFolder in skillFolders {
+			for skillFolder in try fm.contentsOfDirectory(at: userSkillsDir, includingPropertiesForKeys: nil) {
 				let skillFile = skillFolder.appending(path: "SKILL.md")
 				guard fm.fileExists(atPath: skillFile.path(percentEncoded: false)) else { continue }
-
-				if let item = try contentItem(from: skillFile, category: .skills, fallbackName: skillFolder.lastPathComponent) {
+				if let item = try contentItem(from: skillFile, category: .skills, fallbackName: skillFolder.lastPathComponent, isInstalled: true) {
+					installedNames.insert(item.name)
 					items.append(item)
 				}
 			}
 		}
 
+		let pluginsDir = baseDirectory.appending(path: "plugins/marketplaces")
 		guard fm.fileExists(atPath: pluginsDir.path(percentEncoded: false)) else { return items }
 
-		let marketplaces = try fm.contentsOfDirectory(at: pluginsDir, includingPropertiesForKeys: nil)
-		for marketplace in marketplaces {
+		for marketplace in try fm.contentsOfDirectory(at: pluginsDir, includingPropertiesForKeys: nil) {
 			let pluginsPath = marketplace.appending(path: "plugins")
 			guard fm.fileExists(atPath: pluginsPath.path(percentEncoded: false)) else { continue }
 
-			let plugins = try fm.contentsOfDirectory(at: pluginsPath, includingPropertiesForKeys: nil)
-			for plugin in plugins {
+			for plugin in try fm.contentsOfDirectory(at: pluginsPath, includingPropertiesForKeys: nil) {
 				let skillsDir = plugin.appending(path: "skills")
 				guard fm.fileExists(atPath: skillsDir.path(percentEncoded: false)) else { continue }
 
-				let skillFolders = try fm.contentsOfDirectory(at: skillsDir, includingPropertiesForKeys: nil)
-				for skillFolder in skillFolders {
+				for skillFolder in try fm.contentsOfDirectory(at: skillsDir, includingPropertiesForKeys: nil) {
 					let skillFile = skillFolder.appending(path: "SKILL.md")
 					guard fm.fileExists(atPath: skillFile.path(percentEncoded: false)) else { continue }
-
-					if let item = try contentItem(from: skillFile, category: .skills, fallbackName: skillFolder.lastPathComponent) {
+					if let item = try contentItem(from: skillFile, category: .skills, fallbackName: skillFolder.lastPathComponent, isInstalled: false) {
+						guard !installedNames.contains(item.name) else { continue }
 						items.append(item)
 					}
 				}
+			}
+		}
+		return items
+	}
+
+	// MARK: - Plugin Packages (one item per plugin directory)
+	private nonisolated func scanPluginPackages() throws -> [ContentItem] {
+		var items: [ContentItem] = []
+		let fm = FileManager.default
+		let pluginsDir = baseDirectory.appending(path: "plugins/marketplaces")
+		guard fm.fileExists(atPath: pluginsDir.path(percentEncoded: false)) else { return items }
+
+		for marketplace in try fm.contentsOfDirectory(at: pluginsDir, includingPropertiesForKeys: nil) {
+			let pluginsPath = marketplace.appending(path: "plugins")
+			guard fm.fileExists(atPath: pluginsPath.path(percentEncoded: false)) else { continue }
+
+			for plugin in try fm.contentsOfDirectory(at: pluginsPath, includingPropertiesForKeys: nil) {
+				var isDir: ObjCBool = false
+				guard fm.fileExists(atPath: plugin.path(percentEncoded: false), isDirectory: &isDir), isDir.boolValue else { continue }
+
+				let readmeURL = plugin.appending(path: "README.md")
+				let rawContent = fm.fileExists(atPath: readmeURL.path(percentEncoded: false))
+					? ((try? String(contentsOf: readmeURL, encoding: .utf8)) ?? "")
+					: ""
+				let description = rawContent.components(separatedBy: .newlines)
+					.map { $0.trimmingCharacters(in: .whitespaces) }
+					.first { !$0.isEmpty && !$0.hasPrefix("#") }
+
+				let sourceURL = fm.fileExists(atPath: readmeURL.path(percentEncoded: false)) ? readmeURL : plugin
+				items.append(ContentItem(
+					name: plugin.lastPathComponent,
+					itemDescription: description,
+					sourceURL: sourceURL,
+					category: .plugins,
+					platformKind: platformKind,
+					rawContent: rawContent
+				))
 			}
 		}
 		return items
@@ -111,41 +145,34 @@ public struct ClaudeCodeScanner: PlatformScanner {
 		let fm = FileManager.default
 		var activeFilenames: Set<String> = []
 
-		// Scan ~/.claude/commands/ (active commands take priority)
 		let userCommandsDir = baseDirectory.appending(path: "commands")
 		if fm.fileExists(atPath: userCommandsDir.path(percentEncoded: false)) {
 			let commandFiles = try fm.contentsOfDirectory(at: userCommandsDir, includingPropertiesForKeys: nil)
 				.filter { $0.pathExtension == "md" }
-
 			for commandFile in commandFiles {
 				activeFilenames.insert(commandFile.lastPathComponent)
-				if let item = try contentItem(from: commandFile, category: .commands) {
+				if let item = try contentItem(from: commandFile, category: .commands, isInstalled: true) {
 					items.append(item)
 				}
 			}
 		}
 
-		// Scan plugin directories, skipping files already active in user commands
 		let pluginsDir = baseDirectory.appending(path: "plugins/marketplaces")
 		guard fm.fileExists(atPath: pluginsDir.path(percentEncoded: false)) else { return items }
 
-		let marketplaces = try fm.contentsOfDirectory(at: pluginsDir, includingPropertiesForKeys: nil)
-		for marketplace in marketplaces {
+		for marketplace in try fm.contentsOfDirectory(at: pluginsDir, includingPropertiesForKeys: nil) {
 			let pluginsPath = marketplace.appending(path: "plugins")
 			guard fm.fileExists(atPath: pluginsPath.path(percentEncoded: false)) else { continue }
 
-			let plugins = try fm.contentsOfDirectory(at: pluginsPath, includingPropertiesForKeys: nil)
-			for plugin in plugins {
-				let pluginName = plugin.lastPathComponent
+			for plugin in try fm.contentsOfDirectory(at: pluginsPath, includingPropertiesForKeys: nil) {
 				let commandsDir = plugin.appending(path: "commands")
 				guard fm.fileExists(atPath: commandsDir.path(percentEncoded: false)) else { continue }
 
 				let commandFiles = try fm.contentsOfDirectory(at: commandsDir, includingPropertiesForKeys: nil)
 					.filter { $0.pathExtension == "md" }
-
 				for commandFile in commandFiles {
 					guard !activeFilenames.contains(commandFile.lastPathComponent) else { continue }
-					if let item = try contentItem(from: commandFile, category: .commands, namePrefix: pluginName) {
+					if let item = try contentItem(from: commandFile, category: .commands, namePrefix: plugin.lastPathComponent, isInstalled: false) {
 						items.append(item)
 					}
 				}
@@ -159,12 +186,10 @@ public struct ClaudeCodeScanner: PlatformScanner {
 		var items: [ContentItem] = []
 		let fm = FileManager.default
 
-		// Check for .mcp.json in ~/.claude/
 		let mcpFile = baseDirectory.appending(path: ".mcp.json")
 		if fm.fileExists(atPath: mcpFile.path(percentEncoded: false)) {
 			let data = try Data(contentsOf: mcpFile)
 			let config = try JSONDecoder().decode(MCPServerConfig.self, from: data)
-
 			if let servers = config.mcpServers {
 				for (name, entry) in servers {
 					let description = [entry.type, entry.url, entry.command].compactMap { $0 }.joined(separator: " — ")
@@ -174,29 +199,26 @@ public struct ClaudeCodeScanner: PlatformScanner {
 						sourceURL: mcpFile,
 						category: .mcpServers,
 						platformKind: platformKind,
-						rawContent: String(data: data, encoding: .utf8) ?? ""
+						rawContent: String(data: data, encoding: .utf8) ?? "",
+						isInstalled: true
 					))
 				}
 			}
 		}
 
-		// Also scan plugin directories for .mcp.json
 		let pluginsDir = baseDirectory.appending(path: "plugins/marketplaces")
 		guard fm.fileExists(atPath: pluginsDir.path(percentEncoded: false)) else { return items }
 
-		let marketplaces = try fm.contentsOfDirectory(at: pluginsDir, includingPropertiesForKeys: nil)
-		for marketplace in marketplaces {
+		for marketplace in try fm.contentsOfDirectory(at: pluginsDir, includingPropertiesForKeys: nil) {
 			let pluginsPath = marketplace.appending(path: "plugins")
 			guard fm.fileExists(atPath: pluginsPath.path(percentEncoded: false)) else { continue }
 
-			let plugins = try fm.contentsOfDirectory(at: pluginsPath, includingPropertiesForKeys: nil)
-			for plugin in plugins {
+			for plugin in try fm.contentsOfDirectory(at: pluginsPath, includingPropertiesForKeys: nil) {
 				let pluginMcp = plugin.appending(path: ".mcp.json")
 				guard fm.fileExists(atPath: pluginMcp.path(percentEncoded: false)) else { continue }
 
 				let data = try Data(contentsOf: pluginMcp)
 				let config = try JSONDecoder().decode(MCPServerConfig.self, from: data)
-
 				if let servers = config.mcpServers {
 					for (name, entry) in servers {
 						let description = [entry.type, entry.url, entry.command].compactMap { $0 }.joined(separator: " — ")
@@ -206,13 +228,13 @@ public struct ClaudeCodeScanner: PlatformScanner {
 							sourceURL: pluginMcp,
 							category: .mcpServers,
 							platformKind: platformKind,
-							rawContent: String(data: data, encoding: .utf8) ?? ""
+							rawContent: String(data: data, encoding: .utf8) ?? "",
+							isInstalled: false
 						))
 					}
 				}
 			}
 		}
-
 		return items
 	}
 
@@ -221,11 +243,9 @@ public struct ClaudeCodeScanner: PlatformScanner {
 		var items: [ContentItem] = []
 		let fm = FileManager.default
 
-		let configFiles = ["settings.json", "settings.local.json"]
-		for configFile in configFiles {
+		for configFile in ["settings.json", "settings.local.json"] {
 			let fileURL = baseDirectory.appending(path: configFile)
 			guard fm.fileExists(atPath: fileURL.path(percentEncoded: false)) else { continue }
-
 			let content = try String(contentsOf: fileURL, encoding: .utf8)
 			items.append(ContentItem(
 				name: configFile,
@@ -237,7 +257,6 @@ public struct ClaudeCodeScanner: PlatformScanner {
 			))
 		}
 
-		// Scan for CLAUDE.md in the base directory
 		let claudeMD = baseDirectory.appending(path: "CLAUDE.md")
 		if fm.fileExists(atPath: claudeMD.path(percentEncoded: false)) {
 			let content = try String(contentsOf: claudeMD, encoding: .utf8)
@@ -252,12 +271,11 @@ public struct ClaudeCodeScanner: PlatformScanner {
 				rawContent: content
 			))
 		}
-
 		return items
 	}
 
 	// MARK: - Helpers
-	private nonisolated func contentItem(from fileURL: URL, category: ContentCategoryKind, fallbackName: String? = nil, namePrefix: String? = nil) throws -> ContentItem? {
+	private nonisolated func contentItem(from fileURL: URL, category: ContentCategoryKind, fallbackName: String? = nil, namePrefix: String? = nil, isInstalled: Bool = true) throws -> ContentItem? {
 		let content = try String(contentsOf: fileURL, encoding: .utf8)
 		let document = FrontmatterDocument(rawContent: content)
 		let baseName = document.frontmatter.name ?? fallbackName ?? fileURL.deletingPathExtension().lastPathComponent
@@ -270,7 +288,8 @@ public struct ClaudeCodeScanner: PlatformScanner {
 			category: category,
 			platformKind: platformKind,
 			document: document,
-			rawContent: content
+			rawContent: content,
+			isInstalled: isInstalled
 		)
 	}
 }

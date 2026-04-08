@@ -47,7 +47,7 @@ public enum TransferService {
 		switch targetPlatform {
 		case .claudeCode:
 			switch item.category {
-			case .skills:
+			case .skills, .plugins:
 				return base.appending(path: "plugins/local/skills/\(item.name)/SKILL.md")
 			case .agents:
 				return base.appending(path: "plugins/local/agents/\(item.name).md")
@@ -61,7 +61,7 @@ public enum TransferService {
 
 		case .codex:
 			switch item.category {
-			case .skills:
+			case .skills, .plugins:
 				return base.appending(path: "vendor_imports/skills/skills/.curated/\(item.name)/SKILL.md")
 			case .agents:
 				return base.appending(path: "vendor_imports/skills/skills/.curated/\(item.name)/agents/openai.yaml")

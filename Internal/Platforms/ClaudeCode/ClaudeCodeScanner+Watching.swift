@@ -15,7 +15,7 @@ extension ClaudeCodeScanner {
 		case .commands:
 			return [base.appending(path: "commands")]
 		case .skills:
-			return [base.appending(path: "skills"), base.appending(path: "plugins/marketplaces")]
+			return [base.appending(path: "skills"), URL.homeDirectory.appending(path: ".agents/skills"), base.appending(path: "plugins/marketplaces")]
 		case .plugins, .agents:
 			return [base.appending(path: "plugins/marketplaces")]
 		case .mcpServers, .projectConfigs:

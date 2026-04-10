@@ -35,12 +35,18 @@ public struct ClaudeCodeScanner: PlatformScanner {
 		var installedNames: Set<String> = []
 		let fm = FileManager.default
 
-		let userSkillsDir = baseDirectory.appending(path: "skills")
-		if fm.fileExists(atPath: userSkillsDir.path(percentEncoded: false)) {
+		let skillsDirs = [
+			baseDirectory.appending(path: "skills"),
+			URL.homeDirectory.appending(path: ".agents/skills"),
+		]
+
+		for userSkillsDir in skillsDirs {
+			guard fm.fileExists(atPath: userSkillsDir.path(percentEncoded: false)) else { continue }
 			for skillFolder in try fm.contentsOfDirectory(at: userSkillsDir, includingPropertiesForKeys: nil) {
 				let skillFile = skillFolder.appending(path: "SKILL.md")
 				guard fm.fileExists(atPath: skillFile.path(percentEncoded: false)) else { continue }
 				if let item = try contentItem(from: skillFile, category: .skills, fallbackName: skillFolder.lastPathComponent, isInstalled: true) {
+					guard !installedNames.contains(item.name) else { continue }
 					installedNames.insert(item.name)
 					items.append(item)
 				}

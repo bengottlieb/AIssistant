@@ -16,6 +16,7 @@ struct DetailView: View {
 	@State private var showingCloudSheet = false
 	@State private var saveTask: Task<Void, Never>?
 	@State private var pendingSaveURL: URL?
+	@State private var jsonValidationError: String?
 	@Environment(CloudStatusCache.self) private var cloudCache
 
 	var body: some View {
@@ -25,15 +26,22 @@ struct DetailView: View {
 
 			Divider()
 
-			HSplitView {
-				MarkdownEditorView(content: $editedContent)
-					.id(item.sourceURL)
-					.onChange(of: editedContent) { _, newValue in
-						scheduleAutoSave(content: newValue)
-					}
+			VStack(spacing: 0) {
+				HSplitView {
+					MarkdownEditorView(content: $editedContent)
+						.id(item.sourceURL)
+						.onChange(of: editedContent) { _, newValue in
+							scheduleAutoSave(content: newValue)
+							validateJSON(content: newValue)
+						}
 
-				if item.isMarkdown {
-					MarkdownPreviewView(markdown: editedContent)
+					if item.isMarkdown {
+						MarkdownPreviewView(markdown: editedContent)
+					}
+				}
+
+				if let error = jsonValidationError {
+					JSONValidationBanner(error: error)
 				}
 			}
 		}
@@ -54,16 +62,19 @@ struct DetailView: View {
 		}
 		.onAppear {
 			editedContent = item.rawContent
+			validateJSON(content: item.rawContent)
 		}
 		.onChange(of: item) { oldItem, newItem in
 			flushPendingSave(for: oldItem)
 			editedContent = newItem.rawContent
+			validateJSON(content: newItem.rawContent)
 		}
 		.onReceive(NotificationCenter.default.publisher(for: .cloudReplacedLocalFile)) { notification in
 			guard let url = notification.object as? URL,
 				  url == item.sourceURL,
 				  let content = notification.userInfo?["content"] as? String else { return }
 			editedContent = content
+			validateJSON(content: content)
 		}
 	}
 
@@ -91,5 +102,45 @@ struct DetailView: View {
 			try? editedContent.write(to: oldItem.sourceURL, atomically: true, encoding: .utf8)
 		}
 		pendingSaveURL = nil
+	}
+
+	private func validateJSON(content: String) {
+		guard item.isJSON else {
+			jsonValidationError = nil
+			return
+		}
+
+		guard let data = content.data(using: .utf8) else {
+			jsonValidationError = "Unable to encode content as UTF-8"
+			return
+		}
+
+		do {
+			_ = try JSONSerialization.jsonObject(with: data)
+			jsonValidationError = nil
+		} catch {
+			jsonValidationError = error.localizedDescription
+		}
+	}
+}
+
+private struct JSONValidationBanner: View {
+	let error: String
+
+	var body: some View {
+		HStack(spacing: 8) {
+			Image(systemName: "exclamationmark.triangle.fill")
+				.foregroundStyle(.yellow)
+			Text("Invalid JSON: \(error)")
+				.font(.system(.caption, design: .monospaced))
+				.foregroundStyle(.primary)
+			Spacer()
+		}
+		.padding(.horizontal, 12)
+		.padding(.vertical, 8)
+		.background(Color(nsColor: .controlBackgroundColor))
+		.overlay(alignment: .top) {
+			Divider()
+		}
 	}
 }

@@ -46,6 +46,10 @@ public struct ContentItem: Identifiable, Hashable, Sendable {
 		sourceURL.pathExtension.lowercased() == "md"
 	}
 
+	public var isJSON: Bool {
+		sourceURL.pathExtension.lowercased() == "json"
+	}
+
 	public var isSkillBundle: Bool {
 		sourceURL.lastPathComponent == "SKILL.md"
 	}

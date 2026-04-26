@@ -64,21 +64,12 @@
       }
     },
     {
-      "identity" : "networkimage",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/gonzalezreal/NetworkImage",
-      "state" : {
-        "revision" : "2849f5323265386e200484b0d0f896e73c3411b9",
-        "version" : "6.0.1"
-      }
-    },
-    {
       "identity" : "sharedsettings",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/ios-tooling/sharedSettings",
       "state" : {
-        "revision" : "27955fb58afb1393408d211ef0c96510bd9743b2",
-        "version" : "1.0.4"
+        "revision" : "9c0369eae628babd2910fc2aceb2b40250f4e023",
+        "version" : "1.0.8"
       }
     },
     {
@@ -100,12 +91,12 @@
       }
     },
     {
-      "identity" : "swift-markdown-ui",
+      "identity" : "swift-markdown",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/gonzalezreal/swift-markdown-ui",
+      "location" : "https://github.com/swiftlang/swift-markdown",
       "state" : {
-        "revision" : "5f613358148239d0292c0cef674a3c2314737f9e",
-        "version" : "2.4.1"
+        "revision" : "7d9a5ce307528578dfa777d505496bd5f544ad94",
+        "version" : "0.7.3"
       }
     },
     {

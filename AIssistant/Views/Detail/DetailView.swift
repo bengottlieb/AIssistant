@@ -7,6 +7,7 @@
 
 import SwiftUI
 import Internal
+import MarkDownRange
 
 struct DetailView: View {
 	let item: ContentItem
@@ -17,6 +18,8 @@ struct DetailView: View {
 	@State private var saveTask: Task<Void, Never>?
 	@State private var pendingSaveURL: URL?
 	@State private var jsonValidationError: String?
+	@State private var selectedHeadingID: String? = nil
+	@State private var linkDisplayState = LinkDisplayState()
 	@Environment(CloudStatusCache.self) private var cloudCache
 
 	var body: some View {
@@ -29,17 +32,25 @@ struct DetailView: View {
 			Divider()
 
 			VStack(spacing: 0) {
-				HSplitView {
+				if item.isMarkdown {
+					SplitMarkdownScreen(
+						text: $editedContent,
+						selectedHeadingID: $selectedHeadingID,
+						theme: .default,
+						fontSize: 13
+					)
+					.id(item.sourceURL)
+					.environment(linkDisplayState)
+					.onChange(of: editedContent) { _, newValue in
+						scheduleAutoSave(content: newValue)
+					}
+				} else {
 					MarkdownEditorView(content: $editedContent)
 						.id(item.sourceURL)
 						.onChange(of: editedContent) { _, newValue in
 							scheduleAutoSave(content: newValue)
 							validateJSON(content: newValue)
 						}
-
-					if item.isMarkdown {
-						MarkdownPreviewView(markdown: editedContent)
-					}
 				}
 
 				if let error = jsonValidationError {

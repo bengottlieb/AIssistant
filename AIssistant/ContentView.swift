@@ -7,10 +7,12 @@
 
 import SwiftUI
 import Internal
+import MarkDownRange
 
 struct ContentView: View {
 	@State private var viewModel = AppViewModel()
 	@State private var cloudCache = CloudStatusCache()
+	@State private var editorSettings = EditorSettings.shared
 
 	var body: some View {
 		NavigationSplitView {
@@ -30,6 +32,8 @@ struct ContentView: View {
 		}
 		.environment(viewModel)
 		.environment(cloudCache)
+		.environment(\.showLineNumbers, editorSettings.showLineNumbers)
+		.environment(\.syntaxHighlightingEnabled, editorSettings.syntaxHighlightingEnabled)
 		.task {
 			await CloudSyncService.shared.setup()
 			await cloudCache.refresh()

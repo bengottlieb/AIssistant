@@ -23,6 +23,7 @@ struct AIssistantApp: App {
 		.commands {
 			ChronicleCommands()
 			CloudCommands()
+			EditorCommands()
 		}
 
 		Window("SyncEngine Chronicle", id: "chronicle") {
@@ -44,6 +45,24 @@ struct ChronicleCommands: Commands {
 				openWindow(id: "chronicle")
 			}
 			.keyboardShortcut("L", modifiers: [.command, .shift])
+		}
+	}
+}
+
+struct EditorCommands: Commands {
+	var body: some Commands {
+		CommandMenu("Editor") {
+			Toggle("Show Line Numbers", isOn: Binding(
+				get: { EditorSettings.shared.showLineNumbers },
+				set: { EditorSettings.shared.showLineNumbers = $0 }
+			))
+			.keyboardShortcut("L", modifiers: [.command, .option])
+
+			Toggle("Syntax Highlighting", isOn: Binding(
+				get: { EditorSettings.shared.syntaxHighlightingEnabled },
+				set: { EditorSettings.shared.syntaxHighlightingEnabled = $0 }
+			))
+			.keyboardShortcut("H", modifiers: [.command, .option])
 		}
 	}
 }

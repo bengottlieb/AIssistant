@@ -15,7 +15,9 @@
 		B574D9EA2F4F7DA60015B9A9 /* Achtung in Frameworks */ = {isa = PBXBuildFile; productRef = B574D9E92F4F7DA60015B9A9 /* Achtung */; };
 		B574D9ED2F4F7DD00015B9A9 /* CrossPlatformKit in Frameworks */ = {isa = PBXBuildFile; productRef = B574D9EC2F4F7DD00015B9A9 /* CrossPlatformKit */; };
 		B574D9F12F4F7F000015B9A9 /* Suite in Frameworks */ = {isa = PBXBuildFile; productRef = B574D9F22F4F7F000015B9A9 /* Suite */; };
-		B574D9F52F4F80000015B9A9 /* MarkdownUI in Frameworks */ = {isa = PBXBuildFile; productRef = B574D9F42F4F80000015B9A9 /* MarkdownUI */; };
+		B5BC797F2F9E237D00C54687 /* MarkDownRange in Frameworks */ = {isa = PBXBuildFile; productRef = B5BC797E2F9E237D00C54687 /* MarkDownRange */; };
+		B5BC79812F9E237D00C54687 /* MarkdownSyntaxHighlighting in Frameworks */ = {isa = PBXBuildFile; productRef = B5BC79802F9E237D00C54687 /* MarkdownSyntaxHighlighting */; };
+		B5BC79852F9E400000C54687 /* MarkDownRange in Frameworks */ = {isa = PBXBuildFile; productRef = B5BC79862F9E400000C54687 /* MarkDownRange */; };
 		B5F1BAD32F59A4C30074132D /* SharedSettings in Frameworks */ = {isa = PBXBuildFile; productRef = B5F1BAD22F59A4C30074132D /* SharedSettings */; };
 /* End PBXBuildFile section */
 
@@ -47,6 +49,7 @@
 		B55BD34B2F5464FB0084647A /* CloudSyncPlan.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = CloudSyncPlan.md; sourceTree = "<group>"; };
 		B574D9C32F4F7CB90015B9A9 /* AIssistant.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AIssistant.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B574D9D62F4F7CDF0015B9A9 /* Internal.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Internal.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		B5BC79822F9E245600C54687 /* MarkDownRange */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = MarkDownRange; path = /Users/ben/Documents/ManagedProjects/Frameworks/MarkDownRange; sourceTree = "<absolute>"; };
 		B5EF08DB2F7CBFCB008E5019 /* SyncEngine */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = SyncEngine; path = /Users/ben/Documents/ManagedProjects/Frameworks/SyncEngine; sourceTree = "<absolute>"; };
 /* End PBXFileReference section */
 
@@ -70,7 +73,7 @@
 			files = (
 				B574D9DC2F4F7CDF0015B9A9 /* Internal.framework in Frameworks */,
 				B574D9F12F4F7F000015B9A9 /* Suite in Frameworks */,
-				B574D9F52F4F80000015B9A9 /* MarkdownUI in Frameworks */,
+				B5BC79852F9E400000C54687 /* MarkDownRange in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -78,7 +81,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B5BC797F2F9E237D00C54687 /* MarkDownRange in Frameworks */,
 				B574D9EA2F4F7DA60015B9A9 /* Achtung in Frameworks */,
+				B5BC79812F9E237D00C54687 /* MarkdownSyntaxHighlighting in Frameworks */,
 				B574D9E72F4F7D750015B9A9 /* Convey in Frameworks */,
 				B55BD34A2F5464B20084647A /* SyncEngine in Frameworks */,
 				B574D9E42F4F7D380015B9A9 /* Suite in Frameworks */,
@@ -101,6 +106,7 @@
 		B574D9BA2F4F7CB90015B9A9 = {
 			isa = PBXGroup;
 			children = (
+				B5BC79822F9E245600C54687 /* MarkDownRange */,
 				B5EF08DB2F7CBFCB008E5019 /* SyncEngine */,
 				B55BD34C2F5464FB0084647A /* Misc */,
 				B574D9C52F4F7CB90015B9A9 /* AIssistant */,
@@ -151,7 +157,7 @@
 			name = AIssistant;
 			packageProductDependencies = (
 				B574D9F22F4F7F000015B9A9 /* Suite */,
-				B574D9F42F4F80000015B9A9 /* MarkdownUI */,
+				B5BC79862F9E400000C54687 /* MarkDownRange */,
 			);
 			productName = AIssistant;
 			productReference = B574D9C32F4F7CB90015B9A9 /* AIssistant.app */;
@@ -181,6 +187,8 @@
 				B574D9EC2F4F7DD00015B9A9 /* CrossPlatformKit */,
 				B55BD3492F5464B20084647A /* SyncEngine */,
 				B5F1BAD22F59A4C30074132D /* SharedSettings */,
+				B5BC797E2F9E237D00C54687 /* MarkDownRange */,
+				B5BC79802F9E237D00C54687 /* MarkdownSyntaxHighlighting */,
 			);
 			productName = Internal;
 			productReference = B574D9D62F4F7CDF0015B9A9 /* Internal.framework */;
@@ -218,9 +226,9 @@
 				B574D9E52F4F7D750015B9A9 /* XCRemoteSwiftPackageReference "Convey" */,
 				B574D9E82F4F7DA60015B9A9 /* XCRemoteSwiftPackageReference "achtung" */,
 				B574D9EB2F4F7DD00015B9A9 /* XCRemoteSwiftPackageReference "crossplatformkit" */,
-				B574D9F32F4F80000015B9A9 /* XCRemoteSwiftPackageReference "swift-markdown-ui" */,
 				B55BD3482F5464B20084647A /* XCRemoteSwiftPackageReference "SyncEngine" */,
 				B5F1BAD12F59A4C30074132D /* XCRemoteSwiftPackageReference "sharedSettings" */,
+				B5BC797D2F9E237D00C54687 /* XCRemoteSwiftPackageReference "markdownrange" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = B574D9C42F4F7CB90015B9A9 /* Products */;
@@ -617,12 +625,12 @@
 				minimumVersion = 1.1.0;
 			};
 		};
-		B574D9F32F4F80000015B9A9 /* XCRemoteSwiftPackageReference "swift-markdown-ui" */ = {
+		B5BC797D2F9E237D00C54687 /* XCRemoteSwiftPackageReference "markdownrange" */ = {
 			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/gonzalezreal/swift-markdown-ui";
+			repositoryURL = "https://github.com/bengottlieb/markdownrange";
 			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 2.4.1;
+				branch = Main;
+				kind = branch;
 			};
 		};
 		B5F1BAD12F59A4C30074132D /* XCRemoteSwiftPackageReference "sharedSettings" */ = {
@@ -666,10 +674,20 @@
 			package = B574D9E22F4F7D380015B9A9 /* XCRemoteSwiftPackageReference "Suite" */;
 			productName = Suite;
 		};
-		B574D9F42F4F80000015B9A9 /* MarkdownUI */ = {
+		B5BC797E2F9E237D00C54687 /* MarkDownRange */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = B574D9F32F4F80000015B9A9 /* XCRemoteSwiftPackageReference "swift-markdown-ui" */;
-			productName = MarkdownUI;
+			package = B5BC797D2F9E237D00C54687 /* XCRemoteSwiftPackageReference "markdownrange" */;
+			productName = MarkDownRange;
+		};
+		B5BC79802F9E237D00C54687 /* MarkdownSyntaxHighlighting */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = B5BC797D2F9E237D00C54687 /* XCRemoteSwiftPackageReference "markdownrange" */;
+			productName = MarkdownSyntaxHighlighting;
+		};
+		B5BC79862F9E400000C54687 /* MarkDownRange */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = B5BC797D2F9E237D00C54687 /* XCRemoteSwiftPackageReference "markdownrange" */;
+			productName = MarkDownRange;
 		};
 		B5F1BAD22F59A4C30074132D /* SharedSettings */ = {
 			isa = XCSwiftPackageProductDependency;

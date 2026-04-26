@@ -41,6 +41,14 @@ public final class CloudSyncService {
 		let source = CloudSyncDataSource(container: container)
 		self.dataSource = source
 		await SyncEngine.instance.setDataSource(source)
+		
+		Task {
+			do {
+				try await SyncEngine.instance.sync()
+			} catch {
+				print("Sync failed: \(error)")
+			}
+		}
 	}
 
 	public func upload(_ item: ContentItem) {

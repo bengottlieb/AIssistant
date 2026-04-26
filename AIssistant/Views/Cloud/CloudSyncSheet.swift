@@ -16,6 +16,7 @@ struct CloudSyncSheet: View {
 	@State private var showingPreview = false
 	@State private var uploadError: String?
 	@State private var uploadSuccess = false
+	@State private var downloadSuccess = false
 
 	private var status: CloudStatusCache.SyncStatus {
 		cloudCache.syncStatus(for: item)
@@ -56,6 +57,11 @@ struct CloudSyncSheet: View {
 					.foregroundStyle(.green)
 			}
 
+			if downloadSuccess {
+				Label("Download complete!", systemImage: "checkmark.circle.fill")
+					.foregroundStyle(.green)
+			}
+
 			HStack {
 				Button("Close") { dismiss() }
 					.keyboardShortcut(.cancelAction)
@@ -65,11 +71,21 @@ struct CloudSyncSheet: View {
 						.disabled(contentMatchesCloud)
 				}
 
-				Button(status == .notBacked ? "Upload" : "Update") {
-					performUpload()
+				if status == .cloudNewer {
+					Button("Download from Cloud") {
+						performDownload()
+					}
+					.keyboardShortcut(.defaultAction)
+					.disabled(downloadSuccess)
 				}
-				.keyboardShortcut(.defaultAction)
-				.disabled(uploadSuccess || (status != .notBacked && contentMatchesCloud))
+
+				if status != .cloudNewer {
+					Button(status == .notBacked ? "Upload" : "Update") {
+						performUpload()
+					}
+					.keyboardShortcut(status == .cloudNewer ? nil : .defaultAction)
+					.disabled(uploadSuccess || (status != .notBacked && contentMatchesCloud))
+				}
 			}
 		}
 		.padding(24)
@@ -94,5 +110,21 @@ struct CloudSyncSheet: View {
 		CloudSyncService.shared.upload(item)
 		uploadSuccess = true
 		cloudCache.localFileDidChange()
+	}
+
+	private func performDownload() {
+		uploadError = nil
+		guard let cloudContent = cloudCache.cloudContent(for: item) else {
+			uploadError = "Unable to retrieve cloud content"
+			return
+		}
+		do {
+			try cloudContent.write(to: item.sourceURL, atomically: true, encoding: .utf8)
+			NotificationCenter.default.post(name: .cloudReplacedLocalFile, object: item.sourceURL, userInfo: ["content": cloudContent])
+			downloadSuccess = true
+			cloudCache.localFileDidChange()
+		} catch {
+			uploadError = "Failed to write file: \(error.localizedDescription)"
+		}
 	}
 }

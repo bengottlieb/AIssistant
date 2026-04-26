@@ -11,6 +11,7 @@ import Internal
 
 struct ContentItemRow: View {
 	let item: ContentItem
+	var onDownload: ((ContentItem) -> Void)? = nil
 
 	var body: some View {
 			VStack(alignment: .leading, spacing: 4) {
@@ -22,8 +23,20 @@ struct ContentItemRow: View {
 					}
 					Text(item.name)
 						.font(.headline)
+						.foregroundStyle(item.isRemoteOnly ? .secondary : .primary)
 					Spacer()
-					CloudIndicator(item: item)
+					if item.isRemoteOnly {
+						Button {
+							onDownload?(item)
+						} label: {
+							Image(systemName: "icloud.and.arrow.down")
+								.foregroundStyle(.tint)
+						}
+						.buttonStyle(.plain)
+						.help("Download from Cloud")
+					} else {
+						CloudIndicator(item: item)
+					}
 				}
 
 			if let description = item.itemDescription {
@@ -40,38 +53,44 @@ struct ContentItemRow: View {
 		}
 		.padding(.vertical, 2)
 		.contextMenu {
-			Button("Reveal in Finder") {
-				NSWorkspace.shared.activateFileViewerSelecting([item.sourceURL])
-			}
-
-			Button("Copy Path") {
-				NSPasteboard.general.clearContents()
-				NSPasteboard.general.setString(item.sourceURL.path(percentEncoded: false), forType: .string)
-			}
-
-			Divider()
-
-			Button("Open in Default Editor") {
-				NSWorkspace.shared.open(item.sourceURL)
-			}
-
-			if item.category == .commands {
-				Divider()
-
-				if isInUserCommandsDirectory {
-					Button("Deactivate Command") { deactivateCommand() }
-				} else {
-					Button("Activate Command") { activateCommand() }
+			if item.isRemoteOnly {
+				Button("Download from Cloud") {
+					onDownload?(item)
 				}
-			}
+			} else {
+				Button("Reveal in Finder") {
+					NSWorkspace.shared.activateFileViewerSelecting([item.sourceURL])
+				}
 
-			if item.category == .skills {
+				Button("Copy Path") {
+					NSPasteboard.general.clearContents()
+					NSPasteboard.general.setString(item.sourceURL.path(percentEncoded: false), forType: .string)
+				}
+
 				Divider()
 
-				if item.isInstalled {
-					Button("Uninstall Skill") { uninstallSkill() }
-				} else {
-					Button("Install Skill") { installSkill() }
+				Button("Open in Default Editor") {
+					NSWorkspace.shared.open(item.sourceURL)
+				}
+
+				if item.category == .commands {
+					Divider()
+
+					if isInUserCommandsDirectory {
+						Button("Deactivate Command") { deactivateCommand() }
+					} else {
+						Button("Activate Command") { activateCommand() }
+					}
+				}
+
+				if item.category == .skills {
+					Divider()
+
+					if item.isInstalled {
+						Button("Uninstall Skill") { uninstallSkill() }
+					} else {
+						Button("Install Skill") { installSkill() }
+					}
 				}
 			}
 		}

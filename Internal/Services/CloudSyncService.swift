@@ -89,4 +89,39 @@ public final class CloudSyncService {
 			existing.deletePersistedRecord()
 		}
 	}
+
+	public func cachedCloudFiles(platform: PlatformKind, category: ContentCategoryKind) -> [CachedCloudFile] {
+		let context = container.mainContext
+		let platformKey = platform.cloudPrefix
+		let categoryKey = category.rawValue
+		let predicate = #Predicate<CachedCloudFile> { $0.platform == platformKey && $0.category == categoryKey }
+		let descriptor = FetchDescriptor(predicate: predicate)
+		return (try? context.fetch(descriptor)) ?? []
+	}
+
+	public func cachedCloudFile(forRecordName name: String) -> CachedCloudFile? {
+		let context = container.mainContext
+		let predicate = #Predicate<CachedCloudFile> { $0.syncEngineID == name }
+		let descriptor = FetchDescriptor(predicate: predicate)
+		return try? context.fetch(descriptor).first
+	}
+
+	public func writeAllToLocalDisk() -> (written: Int, failed: Int) {
+		let context = container.mainContext
+		let sharedPrefix = ContentItem.sharedCloudPrefix
+		let predicate = #Predicate<CachedCloudFile> { $0.platform != sharedPrefix }
+		let descriptor = FetchDescriptor(predicate: predicate)
+		guard let files = try? context.fetch(descriptor) else { return (0, 0) }
+
+		var written = 0
+		var failed = 0
+		for file in files {
+			if CloudSyncFileWriter.writeToLocalDisk(file) {
+				written += 1
+			} else {
+				failed += 1
+			}
+		}
+		return (written, failed)
+	}
 }

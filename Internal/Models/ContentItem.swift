@@ -17,6 +17,7 @@ public struct ContentItem: Identifiable, Hashable, Sendable {
 	public let document: FrontmatterDocument?
 	public let rawContent: String
 	public let isInstalled: Bool
+	public let isRemoteOnly: Bool
 
 	public init(
 		name: String,
@@ -26,7 +27,8 @@ public struct ContentItem: Identifiable, Hashable, Sendable {
 		platformKind: PlatformKind,
 		document: FrontmatterDocument? = nil,
 		rawContent: String,
-		isInstalled: Bool = true
+		isInstalled: Bool = true,
+		isRemoteOnly: Bool = false
 	) {
 		self.id = sourceURL
 		self.name = name
@@ -37,6 +39,7 @@ public struct ContentItem: Identifiable, Hashable, Sendable {
 		self.document = document
 		self.rawContent = rawContent
 		self.isInstalled = isInstalled
+		self.isRemoteOnly = isRemoteOnly
 	}
 
 	public static func == (lhs: ContentItem, rhs: ContentItem) -> Bool { lhs.id == rhs.id }

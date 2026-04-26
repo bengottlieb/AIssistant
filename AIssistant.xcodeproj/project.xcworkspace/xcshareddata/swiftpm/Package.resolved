@@ -14,8 +14,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/ios-tooling/Beholder",
       "state" : {
-        "revision" : "5ad194d43798b80821dcafd359e8d29848791d3b",
-        "version" : "0.0.3"
+        "revision" : "b46262cd2d07850b1cd4b0fd19736a34b8d41363",
+        "version" : "0.0.5"
       }
     },
     {
@@ -23,8 +23,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/ios-tooling/Chronicle",
       "state" : {
-        "revision" : "9462a9c5c50dc8ac09f1a455584eccb0b4628076",
-        "version" : "0.0.22"
+        "revision" : "dc709f2cf649259e380ac4358ba7676976f91c8a",
+        "version" : "0.0.24"
       }
     },
     {
@@ -32,8 +32,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/ios-tooling/cloudseeding",
       "state" : {
-        "revision" : "90dacef0916885b379c03b72330a876eb5c45873",
-        "version" : "0.1.7"
+        "revision" : "b9b512666cde4286ba82bbddf5fac8f885694fda",
+        "version" : "0.1.8"
       }
     },
     {
@@ -122,8 +122,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/ios-tooling/TagAlong",
       "state" : {
-        "revision" : "f7ddf6ae68e18703c209923210e8a713beb280f3",
-        "version" : "0.0.4"
+        "revision" : "c15cd80a5870989c6d12ecdcad1e32d81bf550a8",
+        "version" : "0.0.5"
       }
     }
   ],

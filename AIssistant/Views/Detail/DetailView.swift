@@ -24,6 +24,8 @@ struct DetailView: View {
 			MetadataView(item: item)
 				.padding()
 
+			CloudDifferenceBanner(item: item, showCloudSheet: $showingCloudSheet)
+
 			Divider()
 
 			VStack(spacing: 0) {
@@ -59,6 +61,9 @@ struct DetailView: View {
 		}
 		.sheet(isPresented: $showingTransferSheet) {
 			TransferSheet(item: item)
+		}
+		.sheet(isPresented: $showingCloudSheet) {
+			CloudSyncSheet(item: item)
 		}
 		.onAppear {
 			editedContent = item.rawContent
@@ -141,6 +146,38 @@ private struct JSONValidationBanner: View {
 		.background(Color(nsColor: .controlBackgroundColor))
 		.overlay(alignment: .top) {
 			Divider()
+		}
+	}
+}
+
+private struct CloudDifferenceBanner: View {
+	let item: ContentItem
+	@Binding var showCloudSheet: Bool
+	@Environment(CloudStatusCache.self) private var cloudCache
+
+	var body: some View {
+		let status = cloudCache.syncStatus(for: item)
+		if !item.isRemoteOnly, status == .localNewer || status == .cloudNewer {
+			HStack(spacing: 8) {
+				Image(systemName: "icloud.fill")
+					.foregroundStyle(status == .cloudNewer ? .yellow : .orange)
+				Text(message(for: status))
+					.font(.subheadline)
+				Spacer()
+				Button("Compare") { showCloudSheet = true }
+					.buttonStyle(.borderless)
+			}
+			.padding(.horizontal, 12)
+			.padding(.vertical, 6)
+			.background(Color(nsColor: .controlBackgroundColor))
+		}
+	}
+
+	private func message(for status: CloudStatusCache.SyncStatus) -> String {
+		switch status {
+		case .cloudNewer: "Cloud version is newer than local."
+		case .localNewer: "Local version is newer than cloud."
+		default: ""
 		}
 	}
 }

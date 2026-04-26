@@ -64,7 +64,7 @@ struct CloudSyncSheet: View {
 
 			HStack {
 				Button("Close") { dismiss() }
-					.keyboardShortcut(.cancelAction)
+					.keyboardShortcut(status == .synced ? .defaultAction : .cancelAction)
 
 				if status != .notBacked {
 					Button("Compare") { showingPreview = true }
@@ -83,7 +83,7 @@ struct CloudSyncSheet: View {
 					Button(status == .notBacked ? "Upload" : "Update") {
 						performUpload()
 					}
-					.keyboardShortcut(status == .cloudNewer ? nil : .defaultAction)
+					.keyboardShortcut(status == .synced ? nil : .defaultAction)
 					.disabled(uploadSuccess || (status != .notBacked && contentMatchesCloud))
 				}
 			}

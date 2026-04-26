@@ -8,13 +8,14 @@
 import Foundation
 
 public enum CloudSyncFileWriter {
-	public static func writeToLocalDisk(_ file: CachedCloudFile) {
+	@discardableResult
+	public static func writeToLocalDisk(_ file: CachedCloudFile) -> Bool {
 		let fileURL: URL
 
 		if file.platform == ContentItem.sharedCloudPrefix {
 			fileURL = ContentItem.sharedClaudeMDURL
 		} else {
-			guard let platformKind = PlatformKind(cloudPrefix: file.platform) else { return }
+			guard let platformKind = PlatformKind(cloudPrefix: file.platform) else { return false }
 			fileURL = platformKind.baseDirectory.appending(path: file.relativePath)
 		}
 
@@ -24,8 +25,10 @@ public enum CloudSyncFileWriter {
 				withIntermediateDirectories: true
 			)
 			try file.content.write(to: fileURL, atomically: true, encoding: .utf8)
+			return true
 		} catch {
 			print("CloudSyncFileWriter: failed to write \(file.fileName): \(error)")
+			return false
 		}
 	}
 }

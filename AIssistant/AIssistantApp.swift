@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import AppKit
 import Internal
 import Chronicle
 
@@ -21,6 +22,7 @@ struct AIssistantApp: App {
 		.defaultSize(width: 1000, height: 650)
 		.commands {
 			ChronicleCommands()
+			CloudCommands()
 		}
 
 		Window("SyncEngine Chronicle", id: "chronicle") {
@@ -42,6 +44,22 @@ struct ChronicleCommands: Commands {
 				openWindow(id: "chronicle")
 			}
 			.keyboardShortcut("L", modifiers: [.command, .shift])
+		}
+	}
+}
+
+struct CloudCommands: Commands {
+	var body: some Commands {
+		CommandGroup(after: .saveItem) {
+			Button("Update All Local Files from Cloud…") {
+				Task { @MainActor in
+					let result = CloudSyncService.shared.writeAllToLocalDisk()
+					let alert = NSAlert()
+					alert.messageText = "Updated Local Files"
+					alert.informativeText = "Wrote \(result.written) file(s) from iCloud." + (result.failed > 0 ? " \(result.failed) failed." : "")
+					alert.runModal()
+				}
+			}
 		}
 	}
 }

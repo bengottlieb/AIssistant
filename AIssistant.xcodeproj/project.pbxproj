@@ -19,6 +19,7 @@
 		B5BC79812F9E237D00C54687 /* MarkdownSyntaxHighlighting in Frameworks */ = {isa = PBXBuildFile; productRef = B5BC79802F9E237D00C54687 /* MarkdownSyntaxHighlighting */; };
 		B5BC79852F9E400000C54687 /* MarkDownRange in Frameworks */ = {isa = PBXBuildFile; productRef = B5BC79862F9E400000C54687 /* MarkDownRange */; };
 		B5F1BAD32F59A4C30074132D /* SharedSettings in Frameworks */ = {isa = PBXBuildFile; productRef = B5F1BAD22F59A4C30074132D /* SharedSettings */; };
+		B5F1BAD42F59A4C30074132D /* SharedSettings in Frameworks */ = {isa = PBXBuildFile; productRef = B5F1BAD52F59A4C30074132D /* SharedSettings */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -74,6 +75,7 @@
 				B574D9DC2F4F7CDF0015B9A9 /* Internal.framework in Frameworks */,
 				B574D9F12F4F7F000015B9A9 /* Suite in Frameworks */,
 				B5BC79852F9E400000C54687 /* MarkDownRange in Frameworks */,
+				B5F1BAD42F59A4C30074132D /* SharedSettings in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -158,6 +160,7 @@
 			packageProductDependencies = (
 				B574D9F22F4F7F000015B9A9 /* Suite */,
 				B5BC79862F9E400000C54687 /* MarkDownRange */,
+				B5F1BAD52F59A4C30074132D /* SharedSettings */,
 			);
 			productName = AIssistant;
 			productReference = B574D9C32F4F7CB90015B9A9 /* AIssistant.app */;
@@ -690,6 +693,11 @@
 			productName = MarkDownRange;
 		};
 		B5F1BAD22F59A4C30074132D /* SharedSettings */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = B5F1BAD12F59A4C30074132D /* XCRemoteSwiftPackageReference "sharedSettings" */;
+			productName = SharedSettings;
+		};
+		B5F1BAD52F59A4C30074132D /* SharedSettings */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = B5F1BAD12F59A4C30074132D /* XCRemoteSwiftPackageReference "sharedSettings" */;
 			productName = SharedSettings;

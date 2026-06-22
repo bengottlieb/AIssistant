@@ -23,8 +23,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/ios-tooling/Chronicle",
       "state" : {
-        "revision" : "dc709f2cf649259e380ac4358ba7676976f91c8a",
-        "version" : "0.0.24"
+        "revision" : "5a44da99206272e63c299857edff548c95a378a5",
+        "version" : "0.0.29"
       }
     },
     {
@@ -32,8 +32,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/ios-tooling/cloudseeding",
       "state" : {
-        "revision" : "b9b512666cde4286ba82bbddf5fac8f885694fda",
-        "version" : "0.1.8"
+        "revision" : "d25fa5226c974678bd3823c14aeaf6db28827225",
+        "version" : "0.2.1"
       }
     },
     {
@@ -55,12 +55,21 @@
       }
     },
     {
+      "identity" : "funnelvision",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/ios-tooling/FunnelVision",
+      "state" : {
+        "branch" : "main",
+        "revision" : "f8488c729e13970100ae2cfb158d3b0a967dd5d8"
+      }
+    },
+    {
       "identity" : "johnnycache",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/ios-tooling/JohnnyCache.git",
       "state" : {
-        "revision" : "edea215f996a058e44bd5f0835c4b89df850a9c9",
-        "version" : "1.0.10"
+        "revision" : "e596c9f607cbba6c2fccf30ddda722c5cd5f1eb8",
+        "version" : "1.0.16"
       }
     },
     {
@@ -68,8 +77,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/ios-tooling/sharedSettings",
       "state" : {
-        "revision" : "9c0369eae628babd2910fc2aceb2b40250f4e023",
-        "version" : "1.0.8"
+        "revision" : "96957a4638250e8f4f95e1ff14da9ff33daeacd0",
+        "version" : "1.1.2"
       }
     },
     {
@@ -77,8 +86,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/ios-tooling/Suite.git",
       "state" : {
-        "revision" : "4561aeb077e5639df4f6166818da33dd1a898113",
-        "version" : "1.3.15"
+        "revision" : "c74afa9df076e52bc54e9b91973b9adc368aff72",
+        "version" : "1.4.14"
       }
     },
     {

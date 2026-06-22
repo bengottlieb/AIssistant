@@ -30,6 +30,9 @@ public final class CachedCloudFile: PersistedCKRecord {
 
 	public required init() { }
 
+	// Schema is empty because this type provides its own populateCloudRecord / load(fromCloud:).
+	public static var cloudRecordSchema: RecordSchema<CachedCloudFile> { RecordSchema { } }
+
 	public func populateCloudRecord(_ record: CKRecord) {
 		record[AIFileFields.content] = content
 		record[AIFileFields.fileName] = fileName

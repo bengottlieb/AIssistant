@@ -90,20 +90,23 @@ public final class CloudSyncService {
 		}
 	}
 
-	public func cachedCloudFiles(platform: PlatformKind, category: ContentCategoryKind) -> [CachedCloudFile] {
+	/// All cached cloud records, fetched without a predicate. SwiftData
+	/// `#Predicate` fetches against `CachedCloudFile` are unreliable (SyncEngine
+	/// documents them being "optimized into failure"), so callers filter in
+	/// memory — the store is small (one record per config file).
+	public func allCachedCloudFiles() -> [CachedCloudFile] {
 		let context = container.mainContext
+		return (try? context.fetch(FetchDescriptor<CachedCloudFile>())) ?? []
+	}
+
+	public func cachedCloudFiles(platform: PlatformKind, category: ContentCategoryKind) -> [CachedCloudFile] {
 		let platformKey = platform.cloudPrefix
 		let categoryKey = category.rawValue
-		let predicate = #Predicate<CachedCloudFile> { $0.platform == platformKey && $0.category == categoryKey }
-		let descriptor = FetchDescriptor(predicate: predicate)
-		return (try? context.fetch(descriptor)) ?? []
+		return allCachedCloudFiles().filter { $0.platform == platformKey && $0.category == categoryKey }
 	}
 
 	public func cachedCloudFile(forRecordName name: String) -> CachedCloudFile? {
-		let context = container.mainContext
-		let predicate = #Predicate<CachedCloudFile> { $0.syncEngineID == name }
-		let descriptor = FetchDescriptor(predicate: predicate)
-		return try? context.fetch(descriptor).first
+		allCachedCloudFiles().first { $0.syncEngineID == name }
 	}
 
 	public func writeAllToLocalDisk() -> (written: Int, failed: Int) {

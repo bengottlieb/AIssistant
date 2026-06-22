@@ -31,13 +31,7 @@ class CloudStatusCache {
 		_ = localChangeCount
 		if !hasRefreshed { return .checking }
 
-		let context = CloudSyncService.shared.container.mainContext
-		let recordName = item.cloudRecordName
-
-		let predicate = #Predicate<CachedCloudFile> { $0.syncEngineID == recordName }
-		let descriptor = FetchDescriptor(predicate: predicate)
-
-		guard let file = try? context.fetch(descriptor).first else {
+		guard let file = CloudSyncService.shared.cachedCloudFile(forRecordName: item.cloudRecordName) else {
 			return .notBacked
 		}
 
@@ -61,12 +55,6 @@ class CloudStatusCache {
 	}
 
 	func cloudContent(for item: ContentItem) -> String? {
-		let context = CloudSyncService.shared.container.mainContext
-		let recordName = item.cloudRecordName
-
-		let predicate = #Predicate<CachedCloudFile> { $0.syncEngineID == recordName }
-		let descriptor = FetchDescriptor(predicate: predicate)
-
-		return try? context.fetch(descriptor).first?.content
+		CloudSyncService.shared.cachedCloudFile(forRecordName: item.cloudRecordName)?.content
 	}
 }

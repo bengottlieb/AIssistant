@@ -16,6 +16,11 @@ public enum CloudSyncFileWriter {
 			fileURL = ContentItem.sharedClaudeMDURL
 		} else {
 			guard let platformKind = PlatformKind(cloudPrefix: file.platform) else { return false }
+			// Folder-based items (skills/plugins) restore every component from
+			// the bundle manifest, relative to the platform base directory.
+			if let bundleData = file.bundleData {
+				return BundleArchive.restore(bundleData, to: platformKind.baseDirectory)
+			}
 			fileURL = platformKind.baseDirectory.appending(path: file.relativePath)
 		}
 

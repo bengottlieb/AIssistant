@@ -18,7 +18,9 @@ struct ContentView: View {
 		NavigationSplitView {
 			SidebarView()
 		} content: {
-			if let category = viewModel.selectedCategory {
+			if !viewModel.filterText.isEmpty {
+				FilteredListView(platform: viewModel.selectedPlatform, filterText: viewModel.filterText)
+			} else if let category = viewModel.selectedCategory {
 				ContentListView(platform: viewModel.selectedPlatform, category: category)
 			} else {
 				EmptyStateView(message: "Select a category")

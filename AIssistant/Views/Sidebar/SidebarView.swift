@@ -57,8 +57,29 @@ struct SidebarView: View {
 		.listStyle(.sidebar)
 		.navigationTitle("AIssistant")
 		.safeAreaInset(edge: .bottom) {
-			SyncIndicator()
-				.padding()
+			VStack(spacing: 8) {
+				HStack(spacing: 6) {
+					Image(systemName: "line.3.horizontal.decrease.circle")
+						.foregroundStyle(.secondary)
+					TextField("Filter", text: $viewModel.filterText)
+						.textFieldStyle(.plain)
+					if !viewModel.filterText.isEmpty {
+						Button {
+							viewModel.filterText = ""
+						} label: {
+							Image(systemName: "xmark.circle.fill")
+								.foregroundStyle(.secondary)
+						}
+						.buttonStyle(.plain)
+					}
+				}
+				.padding(.horizontal, 8)
+				.padding(.vertical, 6)
+				.background(.quaternary, in: .rect(cornerRadius: 8))
+
+				SyncIndicator()
+			}
+			.padding()
 		}
 	}
 }

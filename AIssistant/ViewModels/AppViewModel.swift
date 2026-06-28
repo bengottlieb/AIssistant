@@ -25,6 +25,7 @@ class AppViewModel {
 		didSet { SelectedPlatformKey.sharedValue = selectedPlatform }
 	}
 	var selectedCategory: ContentCategoryKind?
+	var filterText: String = ""
 	var selectedItem: ContentItem? {
 		didSet { if let item = selectedItem { addToHistory(item) } }
 	}

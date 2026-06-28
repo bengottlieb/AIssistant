@@ -13,6 +13,12 @@ struct ContentItemRow: View {
 	let item: ContentItem
 	var onDownload: ((ContentItem) -> Void)? = nil
 
+	@State private var showingInspector = false
+
+	private var canInspect: Bool {
+		item.category == .skills || item.category == .plugins
+	}
+
 	var body: some View {
 			VStack(alignment: .leading, spacing: 4) {
 				HStack {
@@ -53,6 +59,10 @@ struct ContentItemRow: View {
 		}
 		.padding(.vertical, 2)
 		.contextMenu {
+			if canInspect {
+				Button("Get Info") { showingInspector = true }
+				Divider()
+			}
 			if item.isRemoteOnly {
 				Button("Download from Cloud") {
 					onDownload?(item)
@@ -93,6 +103,9 @@ struct ContentItemRow: View {
 					}
 				}
 			}
+		}
+		.sheet(isPresented: $showingInspector) {
+			InspectorSheet(item: item)
 		}
 	}
 

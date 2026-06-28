@@ -13,4 +13,7 @@ public enum AIFileFields {
 	public static let platform = CKRecordField<String>.string("platform")
 	public static let category = CKRecordField<String>.string("category")
 	public static let relativePath = CKRecordField<String>.string("relativePath")
+	/// JSON-encoded [BundleFile] for folder-based items (skills/plugins); nil
+	/// for single-file records.
+	public static let bundleData = CKRecordField<Data>.data("bundleData")
 }

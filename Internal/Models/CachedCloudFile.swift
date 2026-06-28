@@ -22,6 +22,8 @@ public final class CachedCloudFile: PersistedCKRecord {
 	public var platform: String = ""
 	public var category: String = ""
 	public var relativePath: String = ""
+	/// JSON-encoded [BundleFile] for folder-based items; nil for single files.
+	public var bundleData: Data?
 
 	public var ckRecordName: String { syncEngineID }
     public var ckRecordZoneID: CKRecordZone.ID { .init(zoneName: "cloud-records") }
@@ -39,6 +41,7 @@ public final class CachedCloudFile: PersistedCKRecord {
 		record[AIFileFields.platform] = platform
 		record[AIFileFields.category] = category
 		record[AIFileFields.relativePath] = relativePath
+		record[AIFileFields.bundleData] = bundleData
 	}
 
 	public func load(fromCloud record: CKRecord, context: ModelContext) -> Bool {
@@ -47,6 +50,7 @@ public final class CachedCloudFile: PersistedCKRecord {
 		platform = record[AIFileFields.platform] ?? ""
 		category = record[AIFileFields.category] ?? ""
 		relativePath = record[AIFileFields.relativePath] ?? ""
+		bundleData = record[AIFileFields.bundleData]
 		return true
 	}
 

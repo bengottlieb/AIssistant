@@ -72,6 +72,11 @@ public final class CloudSyncService {
 		file.platform = item.isSharedClaudeMD ? ContentItem.sharedCloudPrefix : item.platformKind.cloudPrefix
 		file.category = item.category.rawValue
 		file.relativePath = item.cloudRelativePath
+		if let root = item.bundleRootURL {
+			file.bundleData = BundleArchive.archive(root: root, base: item.platformKind.baseDirectory)
+		} else {
+			file.bundleData = nil
+		}
 		file.setModifiedAt()
 
 		context.reportedSave()
